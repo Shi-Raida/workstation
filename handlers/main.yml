@@ -1,0 +1,2 @@
+---
+- import_tasks: apt_upgrade.yml

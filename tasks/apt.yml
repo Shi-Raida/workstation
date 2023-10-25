@@ -1,0 +1,20 @@
+---
+- name: Update apt cache and upgrade system
+  apt:
+    upgrade: safe
+    update_cache: true
+  become: true
+  register: apt_upgrade
+  notify: Print apt upgrade info
+
+- import_tasks: handlers/apt_upgrade.yml
+
+- name: Clean old apt packages cache
+  apt:
+    autoclean: true
+  become: true
+
+- name: Remove old apt dependencies
+  apt:
+    autoremove: yes
+  become: true
