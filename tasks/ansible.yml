@@ -1,0 +1,24 @@
+---
+- name: Install/Upgrade Ansible with python3-venv
+  pip:
+    name: ansible
+    state: latest
+    virtualenv: "{{ opt_dir }}/ansible"
+    virtualenv_command: python3 -m venv
+  become: true
+
+- name: Create Ansible symlink
+  file:
+    src: "{{ item }}"
+    dest: "{{ bin_dir }}/{{ item | basename }}"
+    state: link
+  with_fileglob: "{{ opt_dir }}/ansible/bin/ansible*"
+  become: true
+
+- name: Remove Ansible apt package
+  apt:
+    name: ansible
+    state: absent
+    purge: true
+  become: true
+  when: ansible_python.executable == opt_dir ~ '/ansible/bin/python3'
