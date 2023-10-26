@@ -1,4 +1,44 @@
 ---
+- name: Install packages from apt
+  apt:
+    name:
+      # Development
+      - build-essential
+      - git
+      - python3
+      - python3-pip
+      - python3-tk
+      - python3-venv
+      - texlive-full
+
+      # Graphics
+      - gimp
+      - gnome-screenshot
+      - vlc
+
+      # Internet
+      - chromium-browser
+      - curl
+      - firefox
+
+      # Office
+      - libreoffice
+      - libreoffice-gtk3
+      - thunderbird
+      - zathura
+
+      # Others
+      - btop
+      - fzf
+      - pandoc
+      - paperkey
+      - ripgrep
+      - sudo
+      - tree
+      - unzip
+    update_cache: true
+  become: true
+
 - name: Update apt cache and upgrade system
   apt:
     upgrade: safe
@@ -9,12 +49,12 @@
 
 - import_tasks: handlers/apt_upgrade.yml
 
-- name: Clean old apt packages cache
-  apt:
-    autoclean: true
-  become: true
-
 - name: Remove old apt dependencies
   apt:
     autoremove: yes
+  become: true
+
+- name: Clean old apt packages cache
+  apt:
+    autoclean: true
   become: true

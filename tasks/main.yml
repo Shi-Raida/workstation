@@ -9,6 +9,5 @@
     msg: Please run as normal user.
   when: ansible_user_id == "root"
 
-- import_tasks: base_programs.yml
 - import_tasks: apt.yml
 - import_tasks: ansible.yml
