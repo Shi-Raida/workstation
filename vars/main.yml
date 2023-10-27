@@ -1,6 +1,6 @@
 ---
-bin_dir: "/usr/local/bin"
-opt_dir: "/usr/local/opt"
+bin_dir: "{{ ansible_user_dir }}/.local/bin"
+opt_dir: "{{ ansible_user_dir }}/.local/opt"
 
 env:
   PATH: "{{ ansible_env.PATH }}"

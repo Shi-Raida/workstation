@@ -9,7 +9,7 @@ file_path="$(readlink -f "$file")"
 [ $# -gt 0 ] && shift 1
 
 cd "${0%/*}" || exit
-command -v ansible > /dev/null 2>&1 || sudo ./scripts/bootstrap-ansible.sh
+command -v ansible > /dev/null 2>&1 || ./scripts/bootstrap-ansible.sh
 
 if [ ! -f "$become_password_file" -o ! -s "$become_password_file" ]; then
   read -rs -p 'become password: ' become_password
@@ -23,4 +23,5 @@ if [ ! -f "$vault_password_file" -o ! -s "$vault_password_file" ]; then
   printf '%s' "$vault_password" > "$vault_password_file"
 fi
 
+bin_dir="$HOME/.local/bin"
 ansible-playbook -e "tasks_file='$file_path'" "$@" play.yml
