@@ -11,11 +11,20 @@ default_ubuntu_dirs:
   - "{{ ansible_user_dir }}/Public"
   - "{{ ansible_user_dir }}/Templates"
   - "{{ ansible_user_dir }}/Videos"
-
 user_dirs:
   - "{{ bin_dir }}"
   - "{{ opt_dir }}"
   - "{{ ansible_user_dir }}/downloads"
+
+firefox_addons:
+  - adblocker-ultimate
+  - bitwarden-password-manager
+  - darkreader
+  - dracula-dark-colorscheme
+  - i-dont-care-about-cookies
+  - styl-us
+firefox_profiles:
+  - "{{ ansible_user_id }}"
 
 env:
   PATH: "{{ ansible_env.PATH }}"

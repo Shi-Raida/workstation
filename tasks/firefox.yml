@@ -1,0 +1,51 @@
+---
+- name: If run in X.org
+  block:
+    - name: Install Firefox
+      snap:
+        name: firefox
+      become: true
+
+    - name: Set Firefox as default web browser
+      shell: BROWSER="" xdg-settings set default-web-browser firefox.desktop
+      changed_when: false
+
+    - name: Create Firefox profiles
+      command: firefox -CreateProfile "{{ item }}"
+      changed_when: false
+      with_items: "{{ firefox_profiles }}"
+
+    - name: Set Firefox to manually choose profile when starting
+      lineinfile:
+        path: "{{ firefox_basedir }}/profiles.ini"
+        regexp: ^StartWithLastProfile=
+        line: StartWithLastProfile=0
+
+    - name: Create Firefox extensions directory
+      file:
+        path: "{{ firefox_basedir }}/{{ item }}/extensions"
+        state: directory
+      with_items: "{{ firefox_profile_paths }}"
+
+    - name: Get Firefox addon information from api
+      uri:
+        url: "https://services.addons.mozilla.org/api/v4/addons/addon/{{ item }}/"
+        return_content: true
+      register: firefox_addon_info
+      with_items: "{{ firefox_addons }}"
+
+    - name: Download Firefox addons
+      get_url:
+        url: "{{ item[1].json.current_version.files[0].url }}"
+        dest: "{{ firefox_basedir }}/{{ item[0] }}/extensions/{{ item[1].json.guid }}.xpi"
+      loop_control:
+        label: "{{ item[0] }} {{ item[1].json.slug }}"
+      with_nested:
+        - "{{ firefox_profile_paths }}"
+        - "{{ firefox_addon_info.results }}"
+
+  when: ansible_env.DISPLAY is defined
+  vars:
+    firefox_basedir: "{{ ansible_user_dir }}/snap/firefox/common/.mozilla/firefox"
+    firefox_profile_paths: "{{ lookup('file', firefox_basedir ~ '/profiles.ini')
+      | regex_findall('^Path=(.*\\.' ~ firefox_profiles | join('|.*\\.') ~ ')$', multiline=True) }}"
