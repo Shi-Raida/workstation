@@ -11,21 +11,8 @@
       - python3-venv
       - texlive-full
 
-      # Graphics
-      - gimp
-      - gnome-screenshot
-      - vlc
-
       # Internet
-      - chromium-browser
       - curl
-      - firefox
-
-      # Office
-      - libreoffice
-      - libreoffice-gtk3
-      - thunderbird
-      - zathura
 
       # Others
       - btop
@@ -38,6 +25,27 @@
       - unzip
     update_cache: true
   become: true
+
+- name: Install screen dependent packages from apt
+  apt:
+    name:
+      # Graphics
+      - gimp
+      - gnome-screenshot
+      - vlc
+
+      # Internet
+      - chromium-browser
+      - firefox
+
+      # Office
+      - libreoffice
+      - libreoffice-gtk3
+      - thunderbird
+      - zathura
+    update_cache: true
+  become: true
+  when: ansible_env.DISPLAY is defined
 
 - name: Update apt cache and upgrade system
   apt:
