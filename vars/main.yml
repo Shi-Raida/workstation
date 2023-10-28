@@ -41,6 +41,15 @@ firefox_addons:
 firefox_profiles:
   - "{{ ansible_user_id }}"
 
+# =================================== Fonts ================================== #
+
+fonts:
+  - fonts-comic-neue
+  - fonts-dejavu-core
+  - fonts-noto-color-emoji
+nerdfonts:
+  - JetBrainsMono
+
 # ================================ Environment =============================== #
 
 env:
