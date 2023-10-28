@@ -1,52 +1,4 @@
 ---
-- name: Install packages from apt
-  apt:
-    name:
-      # Development
-      - build-essential
-      - git
-      - python3
-      - python3-pip
-      - python3-tk
-      - python3-venv
-      - texlive-full
-
-      # Internet
-      - curl
-
-      # Others
-      - btop
-      - fzf
-      - pandoc
-      - paperkey
-      - ripgrep
-      - sudo
-      - tree
-      - unzip
-    update_cache: true
-  become: true
-
-- name: Install screen dependent packages from apt
-  apt:
-    name:
-      # Graphics
-      - gimp
-      - gnome-screenshot
-      - vlc
-
-      # Internet
-      - chromium-browser
-      - firefox
-
-      # Office
-      - libreoffice
-      - libreoffice-gtk3
-      - thunderbird
-      - zathura
-    update_cache: true
-  become: true
-  when: ansible_env.DISPLAY is defined
-
 - name: Update apt cache and upgrade system
   apt:
     upgrade: safe
@@ -56,6 +8,19 @@
   notify: Print apt upgrade info
 
 - import_tasks: handlers/apt_upgrade.yml
+
+- name: Install packages from apt
+  apt:
+    name: "{{ item }}"
+  become: true
+  with_items: "{{ apt_packages }}"
+
+- name: Install screen dependent packages from apt
+  apt:
+    name: "{{ item }}"
+  become: true
+  when: ansible_env.DISPLAY is defined
+  with_items: "{{ apt_screen_packages }}"
 
 - name: Remove old apt dependencies
   apt:

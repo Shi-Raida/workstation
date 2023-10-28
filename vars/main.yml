@@ -1,4 +1,47 @@
 ---
+# =============================== APT Packages =============================== #
+
+apt_packages:
+  # Development
+  - build-essential
+  - git
+  - python3
+  - python3-pip
+  - python3-tk
+  - python3-venv
+  - texlive-full
+
+  # Internet
+  - curl
+
+  # Others
+  - bat
+  - btop
+  - fd-find
+  - fzf
+  - pandoc
+  - paperkey
+  - ripgrep
+  - sudo
+  - tree
+  - unzip
+
+apt_screen_packages:
+  # Graphics
+  - gimp
+  - gnome-screenshot
+  - vlc
+
+  # Internet
+  - chromium-browser
+  - firefox
+
+  # Office
+  - libreoffice
+  - libreoffice-gtk3
+  - thunderbird
+  - zathura
+
 # ================================ Directories =============================== #
 
 xdg_cache_home: "{{ ansible_user_dir }}/.cache"
