@@ -2,7 +2,7 @@
 - name: Configure user
   user:
     name: "{{ ansible_user_id }}"
-    groups: sudo
+    groups: sudo,video
     shell: /bin/zsh
   become: true
 

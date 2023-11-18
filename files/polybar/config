@@ -1,0 +1,269 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/polybar/polybar
+;
+;   The README contains a lot of information
+;
+;==========================================================
+
+[colors]
+background = #33BD93F9
+background-alt = #88FF79C6
+foreground = #F8F8F2
+foreground-alt = #9C9C9C
+primary = #BD93F9
+secondary = #FFB86C
+alert = #FF5555
+text = #F8F8F2
+transparent = #00000000
+
+[bar/base]
+background = ${colors.transparent}
+foreground = ${colors.foreground}
+fixed-center = true
+line-size = 2
+line-color = ${colors.primary}
+border-size = 9
+enable-ipc = true
+font-0 = JetBrainsMonoNerdFont:style=Regular:size=9;2
+font-1 = JetBrainsMonoNerdFont:style=Regular:size=16;3
+font-2 = fixed:pixelsize=10;2
+font-3 = unifont:fontformat=truetype:size=8:antialias=false;2
+
+[bar/top]
+monitor = ${env:MONITOR:}
+width = 100%
+height = 26
+inherit = bar/base
+modules-left = left powerctl middle i3 right 
+modules-center = xwindow
+wm-restack = i3
+cursor-click = pointer
+
+[bar/top-full]
+inherit = bar/top
+modules-right = left cpu space temperature space memory middle date middle pulseaudio space bluetooth middle backlight space keyboard space battery middle trayempty right
+tray-detached = true
+tray-offset-x = -26
+tray-maxsize = 20
+tray-position = right
+tray-foreground = ${colors.foreground}
+tray-background = ${colors.background}
+
+[bar/top-light]
+inherit = bar/top
+modules-right = left date-light middle keyboard right
+
+[module/trayempty]
+type = custom/text
+content-background = ${colors.background}
+content = "          "
+
+[module/space]
+type = custom/text
+content-background = ${colors.background}
+content = "%{T2} %{T-}"
+
+[module/right]
+type = custom/text
+content-foreground = ${colors.background}
+content = "%{T2} %{T-}"
+
+[module/left]
+type = custom/text
+content-foreground = ${colors.background}
+content = "%{T2}%{T-}"
+
+[module/middle]
+type = custom/text
+content-foreground = ${colors.background}
+content = "%{T2} %{T-}"
+
+[module/xwindow]
+type = internal/xwindow
+label-maxlen = 50
+
+[module/keyboard]
+type = custom/script
+exec = ~/.config/polybar/scripts/keyboardctl.sh
+interval = 1
+click-left = ~/.config/polybar/scripts/keyboardctl.sh --toggle &
+format-background = ${colors.background}
+format-prefix = "  "
+format-prefix-foreground = ${colors.foreground-alt}
+
+[module/i3]
+type = internal/i3
+pin-workspaces = true
+show-urgent = true
+strip-wsnumbers = true
+index-sort = true
+format = <label-state> <label-mode>
+label-mode-padding = 2
+label-mode-foreground = ${colors.text}
+label-mode-background = ${colors.primary}
+; focused = Active workspace on focused monitor
+label-focused = %name%
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
+label-focused-padding = 2
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %name%
+label-unfocused-background = ${colors.background}
+label-unfocused-padding = 2
+; visible = Active workspace on unfocused monitor
+label-visible = %name%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+; urgent = Workspace with urgency hint set
+label-urgent = %name%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+; Separator in between workspaces
+label-separator = |
+label-separator-background = ${colors.background}
+
+[module/backlight]
+type = internal/backlight
+; Use the following command to list available cards:
+; $ ls -1 /sys/class/backlight/
+card = intel_backlight
+use-actual-brightness = false
+enable-scroll = true
+format = <ramp> <label>
+format-background = ${colors.background}
+; Only applies if <ramp> is used
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+ramp-foreground = ${colors.foreground-alt}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+
+[module/date]
+type = internal/date
+interval = 5
+date = %Y-%m-%d%
+time = %H:%M
+label = %date% %time%
+format-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = ${colors.secondary}
+
+[module/date-light]
+type = internal/date
+interval = 5
+time = %H:%M
+label = %time%
+format-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = ${colors.secondary}
+
+[module/pulseaudio]
+type = internal/pulseaudio
+format-volume = <ramp-volume> <label-volume>
+format-volume-background = ${colors.background}
+label-muted = "X"
+label-muted-background = ${colors.background}
+label-muted-foreground = ${colors.secondary}
+ramp-volume-0 = " "
+ramp-volume-1 = " "
+ramp-volume-2 = " "
+ramp-volume-foreground = ${colors.foreground-alt}
+click-right = pavucontrol
+
+[module/battery]
+type = internal/battery
+full-at = 98
+low-at = 15
+battery = BAT0
+adapter = ADP1
+format-charging = <animation-charging> <label-charging>
+format-charging-background = ${colors.background}
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-background = ${colors.background}
+format-full-background = ${colors.background}
+format-full-prefix = "  "
+format-full-prefix-foreground = ${colors.primary}
+ramp-capacity-0 = " "
+ramp-capacity-0-foreground = ${colors.alert}
+ramp-capacity-1 = " "
+ramp-capacity-1-foreground = ${colors.secondary}
+ramp-capacity-2 = " "
+ramp-capacity-2-foreground = ${colors.secondary}
+ramp-capacity-3 = " "
+ramp-capacity-3-foreground = ${colors.primary}
+ramp-capacity-4 = " "
+ramp-capacity-4-foreground = ${colors.primary}
+animation-charging-0 = " "
+animation-charging-1 = " "
+animation-charging-2 = " "
+animation-charging-3 = " "
+animation-charging-4 = " "
+animation-charging-foreground = ${colors.primary}
+animation-charging-framerate = 750
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 65
+format = <ramp> <label>
+format-background = ${colors.background}
+label-warn-foreground = ${colors.alert}
+ramp-0 = ""
+ramp-1 = ""
+ramp-2 = ""
+ramp-3 = ""
+ramp-4 = ""
+ramp-foreground = ${colors.foreground-alt}
+
+[module/bluetooth]
+type = custom/script
+exec = ~/.config/polybar/scripts/bluetoothctl.sh
+tail = true
+click-left = ~/.config/polybar/scripts/bluetoothctl.sh --toggle &
+click-right = ~/.config/polybar/scripts/bluetoothctl.sh --select &
+format-background = ${colors.background}
+
+[module/powerctl]
+type = custom/script
+exec = echo "Power"
+click-left = ~/.config/i3/power-menu.sh &
+format-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+
+[settings]
+screenchange-reload = true
+pseudo-transparency = true
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5

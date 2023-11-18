@@ -19,6 +19,7 @@ apt_packages:
   - btop
   - fd-find
   - fzf
+  - numlockx
   - pandoc
   - paperkey
   - ripgrep
@@ -28,6 +29,7 @@ apt_packages:
 
 apt_screen_packages:
   # Graphics
+  - feh
   - gimp
   - gnome-screenshot
   - vlc
@@ -41,6 +43,11 @@ apt_screen_packages:
   - libreoffice-gtk3
   - thunderbird
   - zathura
+
+  # Others
+  - brightnessctl
+  - unclutter
+  - xinit
 
 # ================================ Directories =============================== #
 

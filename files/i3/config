@@ -1,0 +1,185 @@
+set $mod Mod4
+set $alt Mod1
+font pango:JetBrainsMono Nerd Font 8
+floating_modifier $mod
+focus_follows_mouse no
+
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# Start Polybar
+exec_always --no-startup-id ~/.config/polybar/launch.sh &
+
+# Stop bluetooth
+exec --no-startup-id bluetoothctl power off &
+
+# Close a window
+bindsym $mod+q exec --no-startup-id sh ~/.config/i3/close-window.sh
+
+# Start a terminal
+# bindsym $mod+Return exec alacritty # FIXME
+set $term i3-sensible-terminal
+bindsym $mod+Return exec --no-startup-id $term
+
+# Start Firefox
+set $web_browser firefox
+bindsym $mod+Shift+b exec --no-startup-id $web_browser
+
+# Start Nautilus
+bindsym $mod+Shift+f exec --no-startup-id nautilus
+
+# Start rofi
+bindsym $mod+d exec --no-startup-id rofi -show drun
+
+# Interactive screenshot
+bindsym Print exec --no-startup-id gnome-screenshot -i -f /tmp/screenshot.png
+# Area screenshot
+bindsym $mod+Print exec --no-startup-id gnome-screenshot -a -f /tmp/screenshot.png
+
+# Change focus
+bindsym $mod+a focus parent
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move focused window
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Split in horizontal/vertical orientation
+bindsym $mod+v split v
+bindsym $mod+h split h
+
+# Enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# Change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+e layout toggle split
+
+# Toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# Change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# Workspaces
+set $ws1 "1: "
+set $ws2 "2: "
+set $ws3 "3: "
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8: "
+set $ws9 "9: "
+set $ws0 "10: "
+
+# Populate workspaces
+exec --no-startup-id i3-msg "workspace $ws1; exec $term"
+
+# Switch to workspace and populate with default apps
+bindsym $mod+1 workspace $ws1; exec [ $(xdotool search --all --onlyvisible --class $term | wc -l) = 0 ] && $term
+bindsym $mod+2 workspace $ws2; exec [ $(xdotool search --all --onlyvisible --class Code | wc -l) = 0 ] && code
+bindsym $mod+3 workspace $ws3; exec [ $(xdotool search --all --onlyvisible --class $web_browser | wc -l) = 0 ] && $web_browser
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8; exec [ $(xdotool search --all --onlyvisible --class obsidian | wc -l) = 0 ] && obsidian
+bindsym $mod+9 workspace $ws9; exec [ $(xdotool search --all --onlyvisible --class Spotify | wc -l) = 0 ] && spotify
+bindsym $mod+0 workspace $ws0; exec [ $(xdotool search --all --onlyvisible --class thunderbird | wc -l) = 0 ] && thunderbird
+
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws0
+
+# Move current workspace between monitors
+bindsym $mod+Ctrl+Left move workspace to output left
+bindsym $mod+Ctrl+Right move workspace to output right
+
+# Floating windows
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+
+# Reload the configuration file
+bindsym $mod+Shift+c reload
+
+# Restart i3 in place
+bindsym $mod+Shift+r restart
+
+# Reload polybar config
+bindsym $mod+Mod1+p exec --no-startup-id pkill -USR1 polybar
+
+# Lock the screen
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock-fancy --nofork
+bindsym $alt+Ctrl+l exec --no-startup-id i3lock-fancy
+
+# Shutdown / Restart / Suspend
+bindsym $mod+BackSpace exec sh ~/.config/i3/power-menu.sh
+
+# Resize window
+bindsym $mod+r mode "resize"
+mode "resize" {
+        bindsym Left resize shrink width 2 px or 2 ppt
+        bindsym Down resize grow height 2 px or 2 ppt
+        bindsym Up resize shrink height 2 px or 2 ppt
+        bindsym Right resize grow width 2 px or 2 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+# Wallpaper
+# Sleep to make sure all monitors are ready
+exec_always --no-startup-id sleep 2 ; feh --no-fehbg --bg-fill ~/.config/i3/wallpaper.png
+
+# Notification
+exec_always --no-startup-id dunst -config ~/.config/dunst/config
+
+# Numlock on
+exec --no-startup-id numlockx on
+
+# Dracula theme
+# class                 border  bground text    indicator child_border
+client.focused          #6272A4 #6272A4 #F8F8F2 #6272A4   #6272A4
+client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
+client.unfocused        #282A36 #282A36 #BFBFBF #282A36   #282A36
+client.urgent           #44475A #FF5555 #F8F8F2 #FF5555   #FF5555
+client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
+client.background       #F8F8F2
+
+# Gaps
+default_border pixel 4
+gaps inner 7
+gaps outer 2
+gaps bottom 5
+
+# Volume control - See ~/.local/opt/i3-volume/i3volume-pulseaudio.conf
+set $volumepath ~/.local/opt/i3-volume
+set $statuscmd i3status
+set $statussig SIGUSR1
+set $volumestep 5
+bindsym XF86AudioRaiseVolume exec --no-startup-id $volumepath/volume -n -t $statuscmd -u $statussig up $volumestep
+bindsym XF86AudioLowerVolume exec --no-startup-id $volumepath/volume -n -t $statuscmd -u $statussig down $volumestep
+bindsym XF86AudioMute        exec --no-startup-id $volumepath/volume -n -t $statuscmd -u $statussig mute
+bindsym XF86AudioPlay        exec --no-startup-id playerctl play-pause
+
+# Brightness control
+bindsym XF86MonBrightnessUp   exec --no-startup-id brightnessctl set 5%+
+bindsym XF86MonBrightnessDown exec --no-startup-id  brightnessctl set 5%-

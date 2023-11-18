@@ -1,0 +1,39 @@
+---
+- name: Install bluetoothctl
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - blueman
+    - bluez
+    - bluez-alsa-utils
+    - bluez-btsco
+    - bluez-cups
+    - bluez-firmware
+    - bluez-hcidump
+    - bluez-meshd
+    - bluez-obexd
+    - bluez-tests
+    - bluez-tools
+  become: true
+
+- name: Activate experimental bluetooth feature
+  lineinfile:
+    path: "/etc/bluetooth/main.conf"
+    regexp: ^Experimental=
+    insertafter: ^\[General\]
+    line: Experimental=true
+  become: true
+
+- name: Activate ADP2 sink bluetooth feature
+  lineinfile:
+    path: "/etc/bluetooth/main.conf"
+    regexp: ^Enable=[a-zA-Z0-9,]*Sink
+    insertafter: ^\[General\]
+    line: Enable=Source,Sink,Media,Socket
+  become: true
+
+- name: Restart bluetooth service
+  service:
+    name: bluetooth
+    state: restarted
+  become: true

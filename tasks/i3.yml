@@ -1,0 +1,49 @@
+---
+- name: Install i3 packages
+  apt:
+    name: "{{ item }}"
+  become: true
+  with_items:
+    - i3-wm
+    - i3lock-fancy
+    - dunst
+    - polybar
+    - rofi
+    - brightnessctl
+    - feh
+    - numlockx
+    - unclutter
+    - xdotool
+    - xinit
+
+- import_tasks: i3-volume.yml
+- import_tasks: bluetooth.yml
+
+- name: Copy config files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ xdg_config_home }}/"
+  with_items:
+    - i3
+    - dunst
+    - polybar
+    - rofi
+
+- name: Make config file scripts executable
+  file:
+    path: "{{ xdg_config_home }}/{{ item }}"
+    state: touch
+    mode: u+x
+    modification_time: preserve
+    access_time: preserve
+  with_items:
+    - i3/close-window.sh
+    - i3/power-menu.sh
+    - polybar/launch.sh
+    - polybar/scripts/bluetoothctl.sh
+    - polybar/scripts/keyboardctl.sh
+
+- name: Copy xinit config
+  copy:
+    src: xinit/xinit
+    dest: "{{ ansible_user_dir }}/.xinit"
