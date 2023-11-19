@@ -1,0 +1,7 @@
+---
+- name: Restart bluetooth service
+  systemd:
+    name: bluetooth
+    state: restarted
+  become: true
+

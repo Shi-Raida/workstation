@@ -15,6 +15,7 @@
     - bluez-tests
     - bluez-tools
   become: true
+  notify: Restart bluetooth service
 
 - name: Activate experimental bluetooth feature
   lineinfile:
@@ -23,6 +24,7 @@
     insertafter: ^\[General\]
     line: Experimental=true
   become: true
+  notify: Restart bluetooth service
 
 - name: Activate ADP2 sink bluetooth feature
   lineinfile:
@@ -31,9 +33,11 @@
     insertafter: ^\[General\]
     line: Enable=Source,Sink,Media,Socket
   become: true
+  notify: Restart bluetooth service
 
-- name: Restart bluetooth service
-  service:
+- name: Start/Enable bluetooth service
+  systemd:
     name: bluetooth
-    state: restarted
+    state: started
+    enabled: true
   become: true
