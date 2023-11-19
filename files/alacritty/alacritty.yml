@@ -1,0 +1,33 @@
+---
+import:
+  - dracula.yml
+
+window:
+  padding:
+    x: 5
+    y: 5
+
+font:
+  normal:
+    family: JetBrainsMono Nerd Font
+    style: regular
+
+  bold:
+    family: JetBrainsMono Nerd Font
+    style: Bold
+
+  italic:
+    family: JetBrainsMono Nerd Font
+    style: Italic
+
+  bold_italic:
+    family: JetBrainsMono Nerd Font
+    style: Bold Italic
+
+  size: 9
+
+cursor:
+  style:
+    shape: Beam
+    blinking: Always
+  thickness: 0.3

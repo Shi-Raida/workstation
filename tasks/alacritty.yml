@@ -1,0 +1,10 @@
+---
+- name: Install alacritty package
+  apt:
+    name: alacritty
+  become: true
+
+- name: Copy alacritty config
+  copy:
+    src: alacritty
+    dest: "{{ xdg_config_home }}/"

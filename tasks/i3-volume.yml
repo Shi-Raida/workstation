@@ -1,7 +1,7 @@
 ---
 - name: Install i3-volume dependencies
   apt:
-    name: { { item } }
+    name: "{{ item }}"
   with_items:
     - pavucontrol
     - pulseaudio-utils

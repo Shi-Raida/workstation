@@ -18,8 +18,7 @@ exec --no-startup-id bluetoothctl power off &
 bindsym $mod+q exec --no-startup-id sh ~/.config/i3/close-window.sh
 
 # Start a terminal
-# bindsym $mod+Return exec alacritty # FIXME
-set $term i3-sensible-terminal
+set $term alacritty
 bindsym $mod+Return exec --no-startup-id $term
 
 # Start Firefox

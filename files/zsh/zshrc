@@ -1,0 +1,112 @@
+##
+## Zsh
+##
+export ZSH=$HOME/.oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+DISABLE_AUTO_UPDATE=true
+ENABLE_CORRECTION=false
+
+##
+## General config
+##
+skip_global_compinit=1
+
+export PATH=$ZSH_CUSTOM/plugins/git-fuzzy/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.diff-so-fancy:$PATH:$HOME/.pub-cache/bin
+export EDITOR='nvim'
+export VIRTUAL_ENV_DISABLE_PROMPT=
+export LANG=en_US.UTF-8
+export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
+
+##
+## Prompt
+##
+export STARSHIP_CONFIG=~/.config/starship/config.toml
+eval "$(starship init zsh)"
+
+##
+## Oh my ZSH Plugins
+##
+plugins=(
+  ansible
+  command-not-found
+  docker
+  fzf-tab
+  git
+  pip
+  pyenv
+  python
+  sudo
+  vagrant
+  vi-mode
+  z
+  zsh-autosuggestions
+  zsh-completions
+  zsh-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+setopt inc_append_history
+setopt share_history
+
+##
+## Aliases
+##
+
+## Commands
+export_venv() {
+    export VIRTUAL_ENV=$VIRTUAL_ENV:h
+}
+alias activate="source .venv/bin/activate && export_venv"
+alias ls="exa -gHh"
+alias ll="ls -l --icons"
+alias la="ls -a"
+alias lla="ll -a"
+alias open="xdg-open"
+alias t="exa --tree"
+alias top="btop"
+alias vim="nvim"
+alias vi="nvim"
+
+## git
+alias gd="git fuzzy diff"
+alias gs="git fuzzy status"
+alias gl="git pull"
+alias glom="glo --max-count=30"
+
+## keyboard
+alias fr="setxkbmap fr"
+alias en="setxkbmap us"
+
+## ssh
+alias sshs="eval '$(ssh-agent)' && ssh-add"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+##
+## Others
+##
+
+# Rust
+source ~/.cargo/env
+
+# FZF
+fz() {
+  local z_path
+  z_path=$(z -l | fzf-tmux -d '100%' | awk '{print $2}')
+  cd $(echo "$z_path")
+}
+zle     -N   fz
+bindkey '^F' fz
+
+export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4'
+export _Z_EXCLUDE_DIRS=".cache|.git|.venv|node_modules"
+export FZF_DEFAULT_COMMAND="rg --files --hidden --follow -g '!.git' -g '!node_modules' -g '!.venv' 2>/dev/null"
+
+enable-fzf-tab
+zstyle ':fzf-tab:*' fzf-pad 4
+
+
+# X
+if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+  exec startx
+fi
