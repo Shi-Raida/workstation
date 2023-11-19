@@ -5,3 +5,8 @@
     state: restarted
   become: true
 
+- name: Restart syncthing service
+  systemd:
+    name: syncthing
+    scope: user
+    state: restarted

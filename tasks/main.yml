@@ -19,3 +19,4 @@
 - import_tasks: zsh.yml
 - import_tasks: neovim.yml
 - import_tasks: rust.yml
+- import_tasks: syncthing.yml

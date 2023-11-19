@@ -1,0 +1,13 @@
+---
+- name: Install syncthing
+  apt:
+    name: syncthing
+  become: true
+  notify: restart syncthing service
+
+- name: Start/Enable syncthing service
+  systemd:
+    name: syncthing
+    scope: user
+    state: started
+    enabled: true
