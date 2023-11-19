@@ -1,21 +1,25 @@
 ---
-- name: Install i3-volume dependencies
-  apt:
-    name: "{{ item }}"
-  with_items:
-    - pavucontrol
-    - pulseaudio-utils
-  become: true
+- name: If run in X.org
+  block:
+    - name: Install i3-volume dependencies
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - pavucontrol
+        - pulseaudio-utils
+      become: true
 
-- name: Get tags information from github api for i3-volume
-  uri:
-    url: https://api.github.com/repos/hastinbe/i3-volume/tags
-    return_content: true
-  register: github_tags
+    - name: Get tags information from github api for i3-volume
+      uri:
+        url: https://api.github.com/repos/hastinbe/i3-volume/tags
+        return_content: true
+      register: github_tags
 
-- name: Clone i3-volume
-  git:
-    repo: https://github.com/hastinbe/i3-volume
-    dest: "{{ opt_dir }}/i3-volume/"
-    version: "{{ github_tags.json[0].name }}"
-  register: source
+    - name: Clone i3-volume
+      git:
+        repo: https://github.com/hastinbe/i3-volume
+        dest: "{{ opt_dir }}/i3-volume/"
+        version: "{{ github_tags.json[0].name }}"
+      register: source
+
+  when: ansible_env.DISPLAY is defined
