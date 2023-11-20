@@ -10,6 +10,7 @@ apt_packages:
   - python3-pip
   - python3-tk
   - python3-venv
+  - syncthing
   - texlive-full
 
   # Internet
@@ -47,6 +48,7 @@ apt_screen_packages:
   - zathura
 
   # Others
+  - alacritty
   - brightnessctl
   - unclutter
   - xinit
