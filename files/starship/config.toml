@@ -20,6 +20,9 @@ style = "bold #ff5555"
 [hostname]
 style = "bold #bd93f9"
 
+[python]
+symbol = " "
+
 [username]
 format = "[$user]($style) on "
 style_user = "bold #8be9fd"
