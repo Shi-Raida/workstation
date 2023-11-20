@@ -5,7 +5,7 @@ MAP=" Yes,i3-msg kill
 
 selection=$(echo "$MAP" \
     | cut -d ',' -f 1 \
-    | rofi -dmenu -p "Close the window " -l 2 -no-custom -i -m -2 \
+    | rofi -dmenu -p "Close the window " -l 2 -no-custom -i -m -2 -theme-str 'window {width: env(WIDTH, 25ch);}' \
     | head -n 1)
 
 if [ -n "$selection" ]; then
