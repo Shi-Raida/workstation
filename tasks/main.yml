@@ -18,6 +18,7 @@
 - import_tasks: alacritty.yml
 - import_tasks: zsh.yml
 - import_tasks: neovim.yml
+- import_tasks: obsidian.yml
 - import_tasks: rust.yml
 - import_tasks: syncthing.yml
 - import_tasks: thunderbird.yml
