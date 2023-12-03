@@ -1,0 +1,18 @@
+---
+- name: Install git package
+  apt:
+    name: git
+  become: true
+
+- name: Install diff-so-fancy
+  git:
+    repo: https://github.com/so-fancy/diff-so-fancy.git
+    dest: "{{ opt_dir }}/diff-so-fancy/"
+
+- name: Copy git config
+  template:
+    src: git/gitconfig.j2
+    dest: "{{ ansible_user_dir }}/.gitconfig"
+  vars:
+    email: "{{ git_email }}"
+    name: "{{ git_name }}"

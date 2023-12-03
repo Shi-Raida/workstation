@@ -95,13 +95,6 @@ firefox_addons:
 firefox_profiles:
   - "{{ ansible_user_id }}"
 
-# ================================ Thunderbird =============================== #
-
-thunderbird_addons:
-  - dracula-theme-for-thunderbird
-thunderbird_profiles:
-  - "{{ ansible_user_id }}"
-
 # =================================== Fonts ================================== #
 
 fonts:
@@ -110,6 +103,18 @@ fonts:
   - fonts-noto-color-emoji
 nerdfonts:
   - JetBrainsMono
+
+# ==================================== Git =================================== #
+
+git_email: r.godet@outlook.fr
+git_name: Roland Godet
+
+# ================================ Thunderbird =============================== #
+
+thunderbird_addons:
+  - dracula-theme-for-thunderbird
+thunderbird_profiles:
+  - "{{ ansible_user_id }}"
 
 # ==================================== Zsh =================================== #
 
