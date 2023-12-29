@@ -54,6 +54,15 @@ apt_screen_packages:
   - unclutter
   - xinit
 
+# =============================== Config Files =============================== #
+
+config_files:
+  - btop
+  - matplotlib
+
+config_files_screen:
+  - alacritty
+
 # ================================ Directories =============================== #
 
 xdg_cache_home: "{{ ansible_user_dir }}/.cache"
