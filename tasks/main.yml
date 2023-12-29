@@ -10,17 +10,16 @@
   when: ansible_user_id == "root"
 
 - import_tasks: apt.yml
-- import_tasks: config.yml
+- import_tasks: snap.yml
 - import_tasks: ansible.yml
 - import_tasks: user.yml
+- import_tasks: config.yml
 - import_tasks: firefox.yml
 - import_tasks: fonts.yml
 - import_tasks: git.yml
 - import_tasks: i3.yml
 - import_tasks: zsh.yml
 - import_tasks: neovim.yml
-- import_tasks: obsidian.yml
 - import_tasks: rust.yml
 - import_tasks: syncthing.yml
 - import_tasks: thunderbird.yml
-- import_tasks: vscode.yml

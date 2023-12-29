@@ -1,5 +1,5 @@
 ---
-# =============================== APT Packages =============================== #
+# ================================= Packages ================================= #
 
 apt_packages:
   # Development
@@ -53,6 +53,13 @@ apt_screen_packages:
   - brightnessctl
   - unclutter
   - xinit
+
+snap_packages:
+  - obsidian
+
+snap_screen_packages:
+  - code
+  - spotify
 
 # =============================== Config Files =============================== #
 

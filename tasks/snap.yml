@@ -1,0 +1,13 @@
+---
+- name: Install packages from snap
+  snap:
+    name: "{{ item }}"
+  become: true
+  with_items: "{{ snap_packages }}"
+
+- name: Install screen dependent packages from snap
+  snap:
+    name: "{{ item }}"
+  become: true
+  when: ansible_env.DISPLAY is defined
+  with_items: "{{ snap_screen_packages }}"
