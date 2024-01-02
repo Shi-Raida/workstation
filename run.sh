@@ -24,4 +24,4 @@ if [ ! -f "$vault_password_file" -o ! -s "$vault_password_file" ]; then
 fi
 
 bin_dir="$HOME/.local/bin"
-ansible-playbook -e "tasks_file='$file_path'" "$@" play.yml
+PATH=$PATH:$bin_dir ansible-playbook -e "tasks_file='$file_path'" "$@" play.yml
