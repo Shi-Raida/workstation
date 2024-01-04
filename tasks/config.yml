@@ -1,0 +1,13 @@
+---
+- name: Copy config files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ xdg_config_home }}/"
+  with_items: "{{ config_files }}"
+
+- name: Copy screen dependent config files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ xdg_config_home }}/"
+  when: ansible_env.DISPLAY is defined
+  with_items: "{{ config_files_screen }}"

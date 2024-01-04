@@ -1,0 +1,10 @@
+---
+- name: Install rust toolchain
+  shell:
+    cmd: curl https://sh.rustup.rs | sh -s -- --no-modify-path -y
+    creates: "{{ xdg_data_home }}/cargo/bin/rustup"
+
+- name: Update rust toolchain
+  command: rustup update
+  register: rustup_update
+  changed_when: "'updated' in rustup_update.stdout"

@@ -1,0 +1,52 @@
+---
+- name: If run in X.org
+  block:
+    - name: Install Thunderbird
+      apt:
+        name: thunderbird
+      become: true
+
+    - name: Set Thunderbird as default mail manager
+      shell: xdg-settings set default-url-scheme-handler mailto thunderbird.desktop
+      failed_when: false
+      changed_when: false
+
+    - name: Create Thunderbird profiles
+      command: thunderbird -CreateProfile "{{ item }}"
+      changed_when: false
+      with_items: "{{ thunderbird_profiles }}"
+
+    - name: Set Thunderbird to manually choose profile when starting
+      lineinfile:
+        path: "{{ thunderbird_basedir }}/profiles.ini"
+        regexp: ^StartWithLastProfile=
+        line: StartWithLastProfile=0
+
+    - name: Copy the Thunderbird preferences
+      copy:
+        src: "thunderbird/prefs.js"
+        dest: "{{ thunderbird_basedir }}/{{ item }}/prefs.js"
+      with_items: "{{ thunderbird_profile_paths }}"
+
+    - name: Create Thunderbird extensions directory
+      file:
+        path: "{{ thunderbird_basedir }}/{{ item }}/extensions"
+        state: directory
+      with_items: "{{ thunderbird_profile_paths }}"
+
+    - name: Download Thunderbird addons
+      get_url:
+        url: https://addons.thunderbird.net/thunderbird/downloads/latest/{{ item[1] }}/
+        dest: "{{ thunderbird_basedir }}/{{ item[0] }}/extensions/"
+      loop_control:
+        label: "{{ item[0] }} {{ item[1] }}"
+      with_nested:
+        - "{{ thunderbird_profile_paths }}"
+        - "{{ thunderbird_addons }}"
+
+  when: ansible_env.DISPLAY is defined
+  vars:
+    thunderbird_basedir: "{{ ansible_user_dir }}/.thunderbird"
+    thunderbird_profile_paths:
+      "{{ lookup('file', thunderbird_basedir ~ '/profiles.ini')
+      | regex_findall('^Path=(.*\\.' ~ thunderbird_profiles | join('|.*\\.') ~ ')$', multiline=True) }}"

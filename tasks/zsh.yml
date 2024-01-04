@@ -1,0 +1,42 @@
+---
+- name: Install zsh package
+  apt:
+    name: zsh
+  become: true
+
+- name: Check if oh-my-zsh folder exists
+  stat:
+    path: "{{ oh_my_zsh_dir }}/"
+  register: oh_my_zsh_rules
+
+- name: Install oh-my-zsh
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  changed_when: false
+  when: oh_my_zsh_rules.stat.exists == false
+
+- name: Install oh-my-zsh plugins
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ oh_my_zsh_plugings_dir }}/{{ item.name }}"
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ oh_my_zsh_plugings }}"
+
+- name: Install Starship
+  shell: curl -sS https://starship.rs/install.sh | sh -s -- -y
+  changed_when: false
+
+- name: Copy zsh config
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop_control:
+    label: "{{ item.src }}"
+  with_items:
+    - { src: "zsh/zshrc", dest: "{{ ansible_user_dir }}/.zshrc" }
+    - { src: "starship", dest: "{{ xdg_config_home }}/" }
+
+- name: Set zsh as default shell
+  shell: usermod --shell /bin/zsh {{ ansible_user_id }}
+  become: true
+  changed_when: false

@@ -1,0 +1,19 @@
+---
+- name: Configure user
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: sudo,video
+    shell: /bin/zsh
+  become: true
+
+- name: Create user's directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items: "{{ user_dirs }}"
+
+- name: Delete default Ubuntu user's directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ default_ubuntu_dirs }}"
