@@ -1,7 +1,7 @@
 {
   "extends": "@semantic-release/gitlab-config",
   "branches": [
-    "master",
+    "main",
     {
       "name": "develop",
       "prerelease": "dev"
