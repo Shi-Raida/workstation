@@ -157,5 +157,7 @@ oh_my_zsh_plugings:
 
 # ================================ Environment =============================== #
 
+tasks_file: tasks/main.yml # Add a default for CI
+
 env:
   PATH: "{{ ansible_env.PATH }}"

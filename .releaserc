@@ -1,0 +1,61 @@
+{
+  "extends": "@semantic-release/gitlab-config",
+  "branches": [
+    "main",
+    {
+      "name": "develop",
+      "prerelease": "dev"
+    }
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          {
+            "type": "docs",
+            "scope": "README",
+            "release": "patch"
+          },
+          {
+            "type": "refactor",
+            "release": "patch"
+          }
+        ]
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogTitle": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThis project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)."
+      }
+    ],
+    [
+      "@semantic-release/gitlab",
+      {
+        "assets": [
+          {
+            "path": "CHANGELOG.md",
+            "label": "CHANGELOG"
+          },
+          {
+            "path": "README.md",
+            "label": "README"
+          }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "pyproject.toml"
+        ],
+        "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
+      }
+    ]
+  ]
+}
