@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.0.0...v1.0.1) (2024-1-5)
+
 # 1.0.0 (2024-1-4)
 
 
