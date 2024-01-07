@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [1.1.0](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.0.1...v1.1.0) (2024-1-7)
+
+
+### Features
+
+* **i3:** add shortcut to change keyboard layout ([6a92bad](https://gitlab.com/shi_raida/ansible-workstation/commit/6a92bade03d325d592c3382040a5d2803773f15a))
+
 ## [1.0.1](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.0.0...v1.0.1) (2024-1-5)
 
 # 1.0.0 (2024-1-4)
