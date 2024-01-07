@@ -28,6 +28,9 @@ bindsym $mod+Shift+b exec --no-startup-id $web_browser
 # Start Nautilus
 bindsym $mod+Shift+f exec --no-startup-id nautilus
 
+# Toggle keyboard layout
+bindsym $mod+Shift+l exec --no-startup-id ~/.config/i3/toggle-keyboard.sh &
+
 # Start rofi
 bindsym $mod+d exec --no-startup-id rofi -show drun
 
