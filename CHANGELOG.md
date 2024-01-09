@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [1.2.0](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.1.0...v1.2.0) (2024-1-9)
+
+
+### Features
+
+* **snap:** add just ([c082c83](https://gitlab.com/shi_raida/ansible-workstation/commit/c082c83700e29af10884be521cad9b2d9c2de416))
+* **zsh:** add just completions ([f3298f3](https://gitlab.com/shi_raida/ansible-workstation/commit/f3298f3054f5901ee8d8d625a3eace3c865f80b9))
+
 # [1.1.0](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.0.1...v1.1.0) (2024-1-7)
 
 
