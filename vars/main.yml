@@ -57,11 +57,12 @@ apt_screen_packages:
   - xinit
 
 snap_packages:
-  - obsidian
+  - { name: just, channel: edge }
+  - { name: obsidian, channel: stable }
 
 snap_screen_packages:
-  - code
-  - spotify
+  - { name: code, channel: stable }
+  - { name: spotify, channel: stable }
 
 # =============================== Config Files =============================== #
 
