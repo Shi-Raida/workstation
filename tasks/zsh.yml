@@ -34,6 +34,7 @@
     label: "{{ item.src }}"
   with_items:
     - { src: "zsh/zshrc", dest: "{{ ansible_user_dir }}/.zshrc" }
+    - { src: "zsh/completions", dest: "{{ ansible_user_dir }}/.oh-my-zsh/" }
     - { src: "starship", dest: "{{ xdg_config_home }}/" }
 
 - name: Set zsh as default shell
