@@ -1,5 +1,8 @@
-default: run
+# Use with https://github.com/casey/just
 
-# run an ansible task
+@_default:
+    just --list
+
+# Run an ansible task
 run TASK="tasks/main.yml":
     ./run.sh {{ TASK }}
