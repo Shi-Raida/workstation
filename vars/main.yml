@@ -62,6 +62,7 @@ apt_screen_packages:
 
 snap_packages:
   - { name: just, channel: edge }
+  - { name: node, channel: stable }
   - { name: obsidian, channel: stable }
 
 snap_screen_packages:
