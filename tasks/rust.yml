@@ -1,10 +1,19 @@
 ---
-- name: Install rust toolchain
-  shell:
-    cmd: curl https://sh.rustup.rs | sh -s -- --no-modify-path -y
-    creates: "{{ xdg_data_home }}/cargo/bin/rustup"
+- block:
+    - name: Install curl from apt
+      apt:
+        name: curl
+      become: true
 
-- name: Update rust toolchain
-  command: rustup update
-  register: rustup_update
-  changed_when: "'updated' in rustup_update.stdout"
+    - name: Install rust toolchain
+      shell:
+        cmd: curl https://sh.rustup.rs | sh -s -- --no-modify-path -y
+        creates: "{{ rustup_file }}"
+
+    - name: Update rust toolchain
+      command: "{{ rustup_file }} update"
+      register: rustup_update
+      changed_when: "'updated' in rustup_update.stdout"
+
+  vars:
+    rustup_file: "{{ ansible_user_dir }}/.cargo/bin/rustup"
