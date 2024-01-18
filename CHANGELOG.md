@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [1.3.0](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.2.1...v1.3.0) (2024-1-18)
+
+
+### Features
+
+* **apt:** add docker and podman ([13b0f12](https://gitlab.com/shi_raida/ansible-workstation/commit/13b0f12f626a20396c53679c9b874117a8a2d0e7))
+* **snap:** add node ([5a99cb9](https://gitlab.com/shi_raida/ansible-workstation/commit/5a99cb92e084cf79aaa2ac8681e38817471965dc))
+
 ## [1.2.1](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.2.0...v1.2.1) (2024-1-18)
 
 
