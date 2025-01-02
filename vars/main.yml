@@ -4,7 +4,7 @@
 apt_packages:
   # Development
   - build-essential
-  - docker
+  - wmdocker
   - docker-compose
   - git
   - neovim
@@ -24,7 +24,7 @@ apt_packages:
   # Others
   - bat
   - btop
-  - exa
+  - eza
   - fd-find
   - fzf
   - numlockx
@@ -56,7 +56,7 @@ apt_screen_packages:
   - alacritty
   - brightnessctl
   - unclutter
-  - vagrant
+  # - vagrant
   - virtualbox
   - xinit
 

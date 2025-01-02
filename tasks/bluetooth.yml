@@ -12,7 +12,7 @@
     - bluez-hcidump
     - bluez-meshd
     - bluez-obexd
-    - bluez-tests
+    - bluez-test-tools
     - bluez-tools
   become: true
   notify: Restart bluetooth service
