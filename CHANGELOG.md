@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.3.0...v1.3.1) (2025-01-03)
+
+
+### Bug Fixes
+
+* update packages name ([623b17a](https://gitlab.com/shi_raida/ansible-workstation/commit/623b17ad258e7ae4626c593ddc10b003ad341064))
+* update thunderbird location ([3b8f0da](https://gitlab.com/shi_raida/ansible-workstation/commit/3b8f0daf27e3663f73cdaec4b34fffb4fbde6a97))
+
+
+### Reverts
+
+* disable syncthing ([2090e43](https://gitlab.com/shi_raida/ansible-workstation/commit/2090e43a4cd9759f1b28332c25115a6cf36360a5))
+
 # [1.3.0](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.2.1...v1.3.0) (2024-1-18)
 
 
