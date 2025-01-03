@@ -1,16 +1,16 @@
 ---
 - name: Install git package
-  apt:
+  ansible.builtin.apt:
     name: git
   become: true
 
 - name: Install diff-so-fancy
-  git:
+  ansible.builtin.git:
     repo: https://github.com/so-fancy/diff-so-fancy.git
     dest: "{{ opt_dir }}/diff-so-fancy/"
 
 - name: Copy git config
-  template:
+  ansible.builtin.template:
     src: git/gitconfig.j2
     dest: "{{ ansible_user_dir }}/.gitconfig"
   vars:

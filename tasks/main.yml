@@ -1,24 +1,24 @@
 ---
 - name: Fail if OS is not Debian or Ubuntu
-  fail:
+  ansible.builtin.fail:
     msg: This is not Debian or Ubuntu.
   when: ansible_distribution != 'Debian' and ansible_distribution != 'Ubuntu'
 
 - name: Fail if user is root
-  fail:
+  ansible.builtin.fail:
     msg: Please run as normal user.
   when: ansible_user_id == "root"
 
-- import_tasks: apt.yml
-- import_tasks: snap.yml
-- import_tasks: ansible.yml
-- import_tasks: user.yml
-- import_tasks: config.yml
-- import_tasks: firefox.yml
-- import_tasks: fonts.yml
-- import_tasks: git.yml
-- import_tasks: i3.yml
-- import_tasks: zsh.yml
-- import_tasks: neovim.yml
-- import_tasks: rust.yml
-- import_tasks: thunderbird.yml
+- ansible.builtin.import_tasks: apt.yml
+- ansible.builtin.import_tasks: snap.yml
+- ansible.builtin.import_tasks: ansible.yml
+- ansible.builtin.import_tasks: user.yml
+- ansible.builtin.import_tasks: config.yml
+- ansible.builtin.import_tasks: firefox.yml
+- ansible.builtin.import_tasks: fonts.yml
+- ansible.builtin.import_tasks: git.yml
+- ansible.builtin.import_tasks: i3.yml
+- ansible.builtin.import_tasks: zsh.yml
+- ansible.builtin.import_tasks: neovim.yml
+- ansible.builtin.import_tasks: rust.yml
+- ansible.builtin.import_tasks: thunderbird.yml

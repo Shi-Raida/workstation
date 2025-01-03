@@ -1,11 +1,8 @@
 ---
 - name: Print apt upgrade info
-  debug:
+  ansible.builtin.debug:
     msg: "{{ msg }}"
   vars:
     # FIXME - The first line is cropped
-    msg: "{{ apt_upgrade.stdout_lines
-      | select('match', 'The following packages|  ')
-      | map('regex_replace', 'will be', 'were')
-      | join('\n') }}"
+    msg: "{{ apt_upgrade.stdout_lines | select('match', 'The following packages|  ') | map('regex_replace', 'will be', 'were') | join('\n') }}"
   when: msg

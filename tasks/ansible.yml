@@ -1,6 +1,6 @@
 ---
 - name: Install/Upgrade Ansible with python3-venv
-  pip:
+  ansible.builtin.pip:
     name: ansible
     state: latest
     virtualenv: "{{ opt_dir }}/ansible"
@@ -8,7 +8,7 @@
   become: true
 
 - name: Create Ansible symlink
-  file:
+  ansible.builtin.file:
     src: "{{ item }}"
     dest: "{{ bin_dir }}/{{ item | basename }}"
     state: link
@@ -16,7 +16,7 @@
   become: true
 
 - name: Remove Ansible apt package
-  apt:
+  ansible.builtin.apt:
     name: ansible
     state: absent
     purge: true

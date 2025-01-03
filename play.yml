@@ -6,8 +6,7 @@
     - vars/main.yml
 
   handlers:
-    - import_tasks: handlers/main.yml
-
+    - ansible.builtin.import_tasks: handlers/main.yml
   tasks:
-    - import_tasks: "{{ tasks_file }}"
+    - ansible.builtin.import_tasks: "{{ tasks_file }}"
       environment: "{{ env }}"

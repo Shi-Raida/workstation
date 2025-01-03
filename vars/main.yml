@@ -146,18 +146,9 @@ thunderbird_profiles:
 oh_my_zsh_dir: "{{ ansible_user_dir }}/.oh-my-zsh"
 oh_my_zsh_plugings_dir: "{{ oh_my_zsh_dir }}/custom/plugins"
 oh_my_zsh_plugings:
-  - {
-      repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git",
-      name: "zsh-syntax-highlighting",
-    }
-  - {
-      repo: "https://github.com/zsh-users/zsh-autosuggestions",
-      name: "zsh-autosuggestions",
-    }
-  - {
-      repo: "https://github.com/zsh-users/zsh-completions",
-      name: "zsh-completions",
-    }
+  - { repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git", name: "zsh-syntax-highlighting" }
+  - { repo: "https://github.com/zsh-users/zsh-autosuggestions", name: "zsh-autosuggestions" }
+  - { repo: "https://github.com/zsh-users/zsh-completions", name: "zsh-completions" }
   - { repo: "https://github.com/bigH/git-fuzzy.git", name: "git-fuzzy" }
   - { repo: "https://github.com/Aloxaf/fzf-tab", name: "fzf-tab" }
 

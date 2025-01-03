@@ -1,6 +1,6 @@
 ---
 - name: Install packages from snap
-  snap:
+  community.general.snap:
     name: "{{ item.name }}"
     classic: true
     channel: "{{ item.channel }}"
@@ -8,7 +8,7 @@
   with_items: "{{ snap_packages }}"
 
 - name: Install screen dependent packages from snap
-  snap:
+  community.general.snap:
     name: "{{ item.name }}"
     classic: true
     channel: "{{ item.channel }}"

@@ -1,48 +1,54 @@
 ---
 - name: If run in X.org
+  when: ansible_env.DISPLAY is defined
   block:
-    - block:
+    - vars:
+        firefox_basedir: "{{ ansible_user_dir }}/snap/firefox/common/.mozilla/firefox"
+        firefox_profile_paths: "{{ lookup('file', firefox_basedir ~ '/profiles.ini') | regex_findall('^Path=(.*\\.' ~ firefox_profiles | join('|.*\\.') ~ ')$', multiline=True)
+          }}"
+
+      block:
         - name: Install Firefox
-          snap:
+          community.general.snap:
             name: firefox
           become: true
 
-        - name: Set Firefox as default web browser
-          shell: BROWSER="" xdg-settings set default-web-browser firefox.desktop
-          changed_when: false
+        # - name: Set Firefox as default web browser
+        #   shell: BROWSER="" xdg-settings set default-web-browser firefox.desktop
+        #   changed_when: false
 
         - name: Create Firefox profiles
-          command: firefox -CreateProfile "{{ item }}"
+          ansible.builtin.command: firefox -CreateProfile "{{ item }}"
           changed_when: false
           with_items: "{{ firefox_profiles }}"
 
         - name: Set Firefox to manually choose profile when starting
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: "{{ firefox_basedir }}/profiles.ini"
             regexp: ^StartWithLastProfile=
             line: StartWithLastProfile=0
 
         - name: Copy the Firefox preferences
-          copy:
+          ansible.builtin.copy:
             src: "firefox/prefs.js"
             dest: "{{ firefox_basedir }}/{{ item }}/prefs.js"
           with_items: "{{ firefox_profile_paths }}"
 
         - name: Create Firefox extensions directory
-          file:
+          ansible.builtin.file:
             path: "{{ firefox_basedir }}/{{ item }}/extensions"
             state: directory
           with_items: "{{ firefox_profile_paths }}"
 
         - name: Get Firefox addon information from api
-          uri:
+          ansible.builtin.uri:
             url: "https://services.addons.mozilla.org/api/v4/addons/addon/{{ item }}/"
             return_content: true
           register: firefox_addon_info
           with_items: "{{ firefox_addons }}"
 
         - name: Download Firefox addons
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ item[1].json.current_version.files[0].url }}"
             dest: "{{ firefox_basedir }}/{{ item[0] }}/extensions/{{ item[1].json.guid }}.xpi"
           loop_control:
@@ -50,10 +56,3 @@
           with_nested:
             - "{{ firefox_profile_paths }}"
             - "{{ firefox_addon_info.results }}"
-      vars:
-        firefox_basedir: "{{ ansible_user_dir }}/snap/firefox/common/.mozilla/firefox"
-        firefox_profile_paths:
-          "{{ lookup('file', firefox_basedir ~ '/profiles.ini')
-          | regex_findall('^Path=(.*\\.' ~ firefox_profiles | join('|.*\\.') ~ ')$', multiline=True) }}"
-
-  when: ansible_env.DISPLAY is defined

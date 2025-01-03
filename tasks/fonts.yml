@@ -1,19 +1,19 @@
 ---
 - name: Install fonts
-  apt:
+  ansible.builtin.apt:
     name: "{{ item }}"
   become: true
   with_items: "{{ fonts }}"
 
 - name: Create nerdfonts directories
-  file:
+  ansible.builtin.file:
     path: "{{ xdg_data_home }}/fonts/{{ item }}NerdFont/"
     state: directory
   with_items: "{{ nerdfonts }}"
 
 - name: Download and extract nerdfonts
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ item }}.zip
     dest: "{{ xdg_data_home }}/fonts/{{ item }}NerdFont/"
-    remote_src: yes
+    remote_src: true
   with_items: "{{ nerdfonts }}"

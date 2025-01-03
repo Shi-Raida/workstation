@@ -1,6 +1,6 @@
 ---
 - name: Install bluetoothctl
-  apt:
+  ansible.builtin.apt:
     name: "{{ item }}"
   with_items:
     - blueman
@@ -18,7 +18,7 @@
   notify: Restart bluetooth service
 
 - name: Activate experimental bluetooth feature
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "/etc/bluetooth/main.conf"
     regexp: ^Experimental=
     insertafter: ^\[General\]
@@ -27,7 +27,7 @@
   notify: Restart bluetooth service
 
 - name: Activate ADP2 sink bluetooth feature
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "/etc/bluetooth/main.conf"
     regexp: ^Enable=[a-zA-Z0-9,]*Sink
     insertafter: ^\[General\]
@@ -36,7 +36,7 @@
   notify: Restart bluetooth service
 
 - name: Start/Enable bluetooth service
-  systemd:
+  ansible.builtin.systemd:
     name: bluetooth
     state: started
     enabled: true
