@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.3.1...v1.3.2) (2025-06-22)
+
+
+### Bug Fixes
+
+* zsh install ([59daad9](https://gitlab.com/shi_raida/ansible-workstation/commit/59daad90bb3f86bcd8050abd6159dbc605c5b57e))
+
 ## [1.3.1](https://gitlab.com/shi_raida/ansible-workstation/compare/v1.3.0...v1.3.1) (2025-01-03)
 
 
