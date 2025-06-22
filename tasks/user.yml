@@ -3,7 +3,6 @@
   ansible.builtin.user:
     name: "{{ ansible_user_id }}"
     groups: sudo,video
-    shell: /bin/zsh
   become: true
 
 - name: Create user's directories

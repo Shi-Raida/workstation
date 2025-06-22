@@ -24,7 +24,6 @@
 
 - name: Install Starship
   ansible.builtin.shell: |
-    set -o pipefail
     curl -sS https://starship.rs/install.sh | sh -s -- -y
   changed_when: false
 
