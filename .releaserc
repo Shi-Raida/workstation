@@ -1,5 +1,5 @@
 {
-  "extends": "@semantic-release/gitlab-config",
+  "extends": "@semantic-release/github-config",
   "branches": [
     "main",
     {
@@ -33,7 +33,7 @@
       }
     ],
     [
-      "@semantic-release/gitlab",
+      "@semantic-release/github",
       {
         "assets": [
           {
