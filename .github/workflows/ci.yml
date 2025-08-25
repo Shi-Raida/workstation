@@ -1,0 +1,192 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - main
+      - develop
+      - 'feat/*'
+      - 'fix/*'
+      - 'hotfix/*'
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      force_run:
+        description: 'Force run all jobs'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  checks: write
+
+env:
+  PIP_CACHE_DIR: "${{ github.workspace }}/.cache/pip"
+
+jobs:
+  ansible-lint:
+    name: Ansible Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            .cache/pip
+            .venv
+          key: pip-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            pip-${{ runner.os }}-${{ matrix.python-version }}-
+            pip-${{ runner.os }}-
+          
+      - name: Install Python dependencies
+        run: |
+          python --version
+          pip --version
+          pip install virtualenv
+          virtualenv .venv
+          source .venv/bin/activate
+          pip install ansible ansible-lint
+          
+      - name: Run ansible-lint
+        run: |
+          source .venv/bin/activate
+          ansible-lint --exclude .venv
+        continue-on-error: false
+
+  commitlint:
+    name: Commit Lint
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+          
+      - name: Install commitlint dependencies
+        run: |
+          npm install --save-dev @commitlint/cli @commitlint/config-conventional
+          
+      - name: Run commitlint
+        run: |
+          # Get the base commit for commitlint range
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.sha }}"
+          npx commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+        continue-on-error: false
+
+  release:
+    name: Release
+    needs: [ansible-lint, commitlint]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && always() && !cancelled() && needs.ansible-lint.result == 'success' && (needs.commitlint.result == 'success' || needs.commitlint.result == 'skipped')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-${{ runner.os }}-
+            
+      - name: Install semantic-release dependencies
+        run: |
+          npm install --save-dev conventional-changelog-conventionalcommits semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/github
+          
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx semantic-release
+          
+  summary:
+    name: CI Summary
+    if: always()
+    needs: [ansible-lint, commitlint, release]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check job results
+        run: |
+          echo "Ansible Lint: ${{ needs.ansible-lint.result }}"
+          echo "Commit Lint: ${{ needs.commitlint.result }}"
+          echo "Release: ${{ needs.release.result }}"
+          
+          if [[ "${{ needs.ansible-lint.result }}" == "failure" ]]; then
+            echo "❌ Ansible lint failed"
+            exit 1
+          elif [[ "${{ needs.ansible-lint.result }}" == "success" ]]; then
+            echo "✅ Ansible lint passed"
+          fi
+          
+          if [[ "${{ needs.commitlint.result }}" == "failure" ]]; then
+            echo "❌ Commit lint failed"
+            exit 1
+          elif [[ "${{ needs.commitlint.result }}" == "success" ]]; then
+            echo "✅ Commit lint passed"
+          elif [[ "${{ needs.commitlint.result }}" == "skipped" ]]; then
+            echo "⏭️ Commit lint skipped (not on PR)"
+          fi
+          
+          if [[ "${{ needs.release.result }}" == "failure" ]]; then
+            echo "❌ Release failed"
+            exit 1
+          elif [[ "${{ needs.release.result }}" == "success" ]]; then
+            echo "✅ Release completed"
+          elif [[ "${{ needs.release.result }}" == "skipped" ]]; then
+            echo "⏭️ Release skipped (not on main branch)"
+          fi

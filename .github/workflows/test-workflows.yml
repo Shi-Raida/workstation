@@ -1,0 +1,88 @@
+name: Test Workflows
+
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+
+jobs:
+  validate-workflows:
+    runs-on: ubuntu-latest
+    name: Validate GitHub Actions Workflows
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Validate workflow syntax
+        run: |
+          echo "Checking for workflow syntax errors..."
+          for workflow in .github/workflows/*.yml .github/workflows/*.yaml; do
+            if [[ -f "$workflow" ]]; then
+              echo "Validating $workflow"
+              # Basic YAML syntax check
+              python -c "import yaml; yaml.safe_load(open('$workflow'))"
+            fi
+          done
+          
+      - name: Check required workflows exist
+        run: |
+          echo "Checking for required workflow files..."
+          required_workflows=("ci.yml")
+          
+          for workflow in "${required_workflows[@]}"; do
+            if [[ ! -f ".github/workflows/$workflow" ]]; then
+              echo "ERROR: Required workflow $workflow not found"
+              exit 1
+            else
+              echo "✓ Found required workflow: $workflow"
+            fi
+          done
+          
+      - name: Validate CI workflow structure
+        run: |
+          echo "Validating CI workflow structure..."
+          if [[ -f ".github/workflows/ci.yml" ]]; then
+            # Check for required jobs
+            if ! grep -q "ansible-lint:" .github/workflows/ci.yml; then
+              echo "ERROR: ansible-lint job not found in CI workflow"
+              exit 1
+            fi
+            
+            if ! grep -q "commitlint:" .github/workflows/ci.yml; then
+              echo "ERROR: commitlint job not found in CI workflow"
+              exit 1
+            fi
+            
+            if ! grep -q "release:" .github/workflows/ci.yml; then
+              echo "ERROR: release job not found in CI workflow"
+              exit 1
+            fi
+            
+            # Check for required triggers
+            if ! grep -q "push:" .github/workflows/ci.yml; then
+              echo "ERROR: push trigger not found in CI workflow"
+              exit 1
+            fi
+            
+            if ! grep -q "pull_request:" .github/workflows/ci.yml; then
+              echo "ERROR: pull_request trigger not found in CI workflow"
+              exit 1
+            fi
+            
+            echo "✓ CI workflow structure validation passed"
+          fi
+          
+      - name: Check workflow permissions
+        run: |
+          echo "Checking workflow permissions..."
+          if [[ -f ".github/workflows/ci.yml" ]]; then
+            if grep -q "permissions:" .github/workflows/ci.yml; then
+              echo "✓ Permissions section found in CI workflow"
+            else
+              echo "WARNING: No permissions section found in CI workflow"
+            fi
+          fi
