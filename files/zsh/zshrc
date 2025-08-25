@@ -83,6 +83,17 @@ alias sshs="eval '$(ssh-agent)' && ssh-add"
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 ##
+## Claude Code
+##
+
+export PATH="$HOME/.claude/local:$PATH"
+alias claude="$HOME/.claude/local/claude"
+alias cc="claude"
+alias claude-code="claude"
+alias plan="claude --permission-mode plan"
+alias commit="plan /commit"
+
+##
 ## Others
 ##
 

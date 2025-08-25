@@ -1,0 +1,91 @@
+---
+- name: Check Node.js version for Claude Code CLI
+  ansible.builtin.command: node --version
+  register: node_version_check
+  changed_when: false
+
+- name: Verify Node.js version is compatible with Claude Code CLI
+  ansible.builtin.assert:
+    that:
+      - node_version_check.stdout is version('v18.0.0', '>=')
+    fail_msg: "Node.js version 18+ is required for Claude Code CLI"
+
+- name: Create .claude directory structure
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.claude/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - commands
+    - agents
+    - plugins
+
+- name: Check if Claude CLI is already installed
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.claude/local/claude"
+  register: existing_claude_cli
+
+- name: Download and install Claude Code CLI
+  when: not existing_claude_cli.stat.exists and claude_install_cli | default(true)
+  block:
+    - name: Create temporary directory for Claude installer
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: claude_install
+      register: claude_temp_dir
+
+    - name: Download Claude Code CLI installer
+      ansible.builtin.get_url:
+        url: "{{ claude_cli_installer_url }}"
+        dest: "{{ claude_temp_dir.path }}/install-claude.sh"
+        mode: '0755'
+        timeout: 30
+
+    - name: Install Claude Code CLI
+      ansible.builtin.shell: |
+        cd "{{ claude_temp_dir.path }}"
+        bash install-claude.sh --install-dir="{{ ansible_user_dir }}/.claude/local"
+      environment:
+        HOME: "{{ ansible_user_dir }}"
+      changed_when: true
+
+    - name: Clean up temporary directory
+      ansible.builtin.file:
+        path: "{{ claude_temp_dir.path }}"
+        state: absent
+
+- name: Copy Claude configuration files
+  ansible.builtin.copy:
+    src: "claude/"
+    dest: "{{ ansible_user_dir }}/.claude/"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Make statusline command executable
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.claude/statusline-command.sh"
+    mode: '0755'
+
+- name: Verify Claude CLI installation
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.claude/local/claude"
+  register: claude_cli_verification
+
+- name: Assert Claude CLI is properly installed
+  ansible.builtin.assert:
+    that:
+      - claude_cli_verification.stat.exists
+      - claude_cli_verification.stat.executable
+    fail_msg: "Claude CLI installation verification failed"
+
+- name: Test Claude CLI basic functionality
+  ansible.builtin.command: "{{ ansible_user_dir }}/.claude/local/claude --version"
+  register: claude_version_test
+  changed_when: false
+  failed_when: claude_version_test.rc != 0
+
+- name: Create logs directory for Claude Code
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.local/share/claude"
+    state: directory
+    mode: '0755'
