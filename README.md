@@ -1,7 +1,8 @@
 # Ansible Workstation
 
-An [Ansible] playbook to setup my [Ubuntu] workstation.
+[![CI](https://github.com/Shi-Raida/workstation/actions/workflows/ci.yml/badge.svg)](https://github.com/Shi-Raida/workstation/actions/workflows/ci.yml)
 
+An [Ansible] playbook to setup my [Ubuntu] workstation.
 
 <!-- ================================ Links ================================ -->
 
