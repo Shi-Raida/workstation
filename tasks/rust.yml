@@ -15,7 +15,7 @@
         mode: '0755'
 
     - name: Install rust toolchain
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: /tmp/rustup-installer.sh --no-modify-path -y
         creates: "{{ rustup_file }}"
 

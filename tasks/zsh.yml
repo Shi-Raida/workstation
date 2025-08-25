@@ -30,7 +30,7 @@
     mode: '0755'
 
 - name: Install Starship
-  ansible.builtin.shell: /tmp/starship-installer.sh -y
+  ansible.builtin.command: /tmp/starship-installer.sh -y
   args:
     creates: /usr/local/bin/starship
 
