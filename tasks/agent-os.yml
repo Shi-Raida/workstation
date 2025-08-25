@@ -1,0 +1,45 @@
+---
+- name: Create .agent-os directory structure
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.agent-os/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - instructions
+    - instructions/core
+    - instructions/meta
+    - standards
+    - standards/code-style
+
+- name: Copy Agent-OS instruction files
+  ansible.builtin.copy:
+    src: "agent-os/instructions/"
+    dest: "{{ ansible_user_dir }}/.agent-os/instructions/"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Copy Agent-OS standards files
+  ansible.builtin.copy:
+    src: "agent-os/standards/"
+    dest: "{{ ansible_user_dir }}/.agent-os/standards/"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Verify Agent-OS installation
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.agent-os/instructions/core/execute-tasks.md"
+  register: agent_os_verification
+
+- name: Assert Agent-OS is properly installed
+  ansible.builtin.assert:
+    that:
+      - agent_os_verification.stat.exists
+      - agent_os_verification.stat.isreg
+    fail_msg: "Agent-OS installation verification failed"
+
+- name: Set Agent-OS directory permissions
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.agent-os"
+    mode: '0755'
+    recurse: true
+    state: directory

@@ -35,3 +35,6 @@
   ansible.builtin.import_tasks: rust.yml
 - name: Setup Thunderbird
   ansible.builtin.import_tasks: thunderbird.yml
+- name: Setup Agent-OS
+  ansible.builtin.import_tasks: agent-os.yml
+  when: setup_agent_os | default(true)
