@@ -22,37 +22,14 @@ skip_list:
   - name[casing]       # Allow flexible task naming
   - risky-file-permissions  # Workstation setup may need specific permissions
 
-# Configure rule behavior
-rules:
-  # Allow complex conditionals in when statements
-  complexity[tasks]:
-    max: 20
-  
-  # Set line length limit (default is 160)  
-  line-length:
-    max: 200
-
 # Enable offline mode (don't check galaxy requirements)
 offline: false
-
-# Use colored output when running in terminal
-colored: true
 
 # Set verbosity level (0=quiet, 1=normal, 2=verbose)
 verbosity: 1
 
 # Parseable format for CI/CD integration
 parseable: false
-
-# Show progress when linting multiple files
-progress: true
-
-# Generate statistics after linting
-statistics: false
-
-# Minimum ansible version supported
-supported_ansible:
-  - ">=2.9"
 
 # Define custom rules directory if needed
 # rulesdir:
