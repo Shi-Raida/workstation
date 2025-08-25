@@ -166,27 +166,59 @@ jobs:
           echo "Commit Lint: ${{ needs.commitlint.result }}"
           echo "Release: ${{ needs.release.result }}"
           
+          # Initialize workflow summary
+          echo "# 🚀 CI Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Job results table
+          echo "## 📊 Job Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          
+          # Ansible Lint
           if [[ "${{ needs.ansible-lint.result }}" == "failure" ]]; then
+            echo "| Ansible Lint | ❌ | Failed |" >> $GITHUB_STEP_SUMMARY
             echo "❌ Ansible lint failed"
             exit 1
           elif [[ "${{ needs.ansible-lint.result }}" == "success" ]]; then
+            echo "| Ansible Lint | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
             echo "✅ Ansible lint passed"
+          else
+            echo "| Ansible Lint | ⏭️ | Skipped |" >> $GITHUB_STEP_SUMMARY
           fi
           
+          # Commit Lint
           if [[ "${{ needs.commitlint.result }}" == "failure" ]]; then
+            echo "| Commit Lint | ❌ | Failed |" >> $GITHUB_STEP_SUMMARY
             echo "❌ Commit lint failed"
             exit 1
           elif [[ "${{ needs.commitlint.result }}" == "success" ]]; then
+            echo "| Commit Lint | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
             echo "✅ Commit lint passed"
           elif [[ "${{ needs.commitlint.result }}" == "skipped" ]]; then
+            echo "| Commit Lint | ⏭️ | Skipped (not on PR) |" >> $GITHUB_STEP_SUMMARY
             echo "⏭️ Commit lint skipped (not on PR)"
           fi
           
+          # Release
           if [[ "${{ needs.release.result }}" == "failure" ]]; then
+            echo "| Release | ❌ | Failed |" >> $GITHUB_STEP_SUMMARY
             echo "❌ Release failed"
             exit 1
           elif [[ "${{ needs.release.result }}" == "success" ]]; then
+            echo "| Release | ✅ | Completed |" >> $GITHUB_STEP_SUMMARY
             echo "✅ Release completed"
           elif [[ "${{ needs.release.result }}" == "skipped" ]]; then
+            echo "| Release | ⏭️ | Skipped (not on main) |" >> $GITHUB_STEP_SUMMARY
             echo "⏭️ Release skipped (not on main branch)"
           fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Generated at $(date -u '+%Y-%m-%d %H:%M:%S UTC')*" >> $GITHUB_STEP_SUMMARY
