@@ -7,7 +7,8 @@
   register: apt_upgrade
   notify: Print apt upgrade info
 
-- ansible.builtin.import_tasks: handlers/apt_upgrade.yml
+- name: Import APT upgrade handler
+  ansible.builtin.import_tasks: handlers/apt_upgrade.yml
 - name: Install packages from apt
   ansible.builtin.apt:
     name: "{{ item }}"

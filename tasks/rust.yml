@@ -1,5 +1,6 @@
 ---
-- vars:
+- name: Rust toolchain installation
+  vars:
     rustup_file: "{{ ansible_user_dir }}/.cargo/bin/rustup"
   block:
     - name: Install curl from apt
@@ -7,9 +8,15 @@
         name: curl
       become: true
 
+    - name: Download rustup installer
+      ansible.builtin.get_url:
+        url: https://sh.rustup.rs
+        dest: /tmp/rustup-installer.sh
+        mode: '0755'
+
     - name: Install rust toolchain
       ansible.builtin.shell:
-        cmd: curl https://sh.rustup.rs | sh -s -- --no-modify-path -y
+        cmd: /tmp/rustup-installer.sh --no-modify-path -y
         creates: "{{ rustup_file }}"
 
     - name: Update rust toolchain

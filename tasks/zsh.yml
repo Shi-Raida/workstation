@@ -18,14 +18,21 @@
   ansible.builtin.git:
     repo: "{{ item.repo }}"
     dest: "{{ oh_my_zsh_plugings_dir }}/{{ item.name }}"
+    version: "{{ item.version | default('HEAD') }}"
   loop_control:
     label: "{{ item.name }}"
   with_items: "{{ oh_my_zsh_plugings }}"
 
+- name: Download Starship installer
+  ansible.builtin.get_url:
+    url: https://starship.rs/install.sh
+    dest: /tmp/starship-installer.sh
+    mode: '0755'
+
 - name: Install Starship
-  ansible.builtin.shell: |
-    curl -sS https://starship.rs/install.sh | sh -s -- -y
-  changed_when: false
+  ansible.builtin.shell: /tmp/starship-installer.sh -y
+  args:
+    creates: /usr/local/bin/starship
 
 - name: Copy zsh config
   ansible.builtin.copy:

@@ -21,6 +21,7 @@ skip_list:
   - yaml[line-length]  # Allow longer YAML lines for readability
   - name[casing]       # Allow flexible task naming
   - risky-file-permissions  # Workstation setup may need specific permissions
+  - internal-error     # Skip vault password file errors in CI
 
 # Enable offline mode (don't check galaxy requirements)
 offline: false

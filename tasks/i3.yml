@@ -19,8 +19,10 @@
         - xdotool
         - xinit
 
-    - ansible.builtin.import_tasks: i3-volume.yml
-    - ansible.builtin.import_tasks: bluetooth.yml
+    - name: Setup i3 volume controls
+      ansible.builtin.import_tasks: i3-volume.yml
+    - name: Setup bluetooth integration
+      ansible.builtin.import_tasks: bluetooth.yml
     - name: Copy config files
       ansible.builtin.copy:
         src: "{{ item }}"

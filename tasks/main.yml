@@ -9,16 +9,29 @@
     msg: Please run as normal user.
   when: ansible_user_id == "root"
 
-- ansible.builtin.import_tasks: apt.yml
-- ansible.builtin.import_tasks: snap.yml
-- ansible.builtin.import_tasks: ansible.yml
-- ansible.builtin.import_tasks: user.yml
-- ansible.builtin.import_tasks: config.yml
-- ansible.builtin.import_tasks: firefox.yml
-- ansible.builtin.import_tasks: fonts.yml
-- ansible.builtin.import_tasks: git.yml
-- ansible.builtin.import_tasks: i3.yml
-- ansible.builtin.import_tasks: zsh.yml
-- ansible.builtin.import_tasks: neovim.yml
-- ansible.builtin.import_tasks: rust.yml
-- ansible.builtin.import_tasks: thunderbird.yml
+- name: Setup APT packages
+  ansible.builtin.import_tasks: apt.yml
+- name: Setup Snap packages
+  ansible.builtin.import_tasks: snap.yml
+- name: Setup Ansible
+  ansible.builtin.import_tasks: ansible.yml
+- name: Setup user account
+  ansible.builtin.import_tasks: user.yml
+- name: Setup configuration files
+  ansible.builtin.import_tasks: config.yml
+- name: Setup Firefox
+  ansible.builtin.import_tasks: firefox.yml
+- name: Setup fonts
+  ansible.builtin.import_tasks: fonts.yml
+- name: Setup Git
+  ansible.builtin.import_tasks: git.yml
+- name: Setup i3 window manager
+  ansible.builtin.import_tasks: i3.yml
+- name: Setup Zsh shell
+  ansible.builtin.import_tasks: zsh.yml
+- name: Setup Neovim
+  ansible.builtin.import_tasks: neovim.yml
+- name: Setup Rust toolchain
+  ansible.builtin.import_tasks: rust.yml
+- name: Setup Thunderbird
+  ansible.builtin.import_tasks: thunderbird.yml

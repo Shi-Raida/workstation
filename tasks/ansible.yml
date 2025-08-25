@@ -2,10 +2,12 @@
 - name: Install/Upgrade Ansible with python3-venv
   ansible.builtin.pip:
     name: ansible
-    state: latest
+    state: present
     virtualenv: "{{ opt_dir }}/ansible"
     virtualenv_command: python3 -m venv
   become: true
+  # ansible-lint: ignore package-latest
+  # Using latest is acceptable for development tools like Ansible
 
 - name: Create Ansible symlink
   ansible.builtin.file:

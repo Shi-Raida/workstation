@@ -8,6 +8,7 @@
   ansible.builtin.git:
     repo: https://github.com/so-fancy/diff-so-fancy.git
     dest: "{{ opt_dir }}/diff-so-fancy/"
+    version: "{{ diff_so_fancy_version | default('HEAD') }}"
 
 - name: Copy git config
   ansible.builtin.template:
@@ -15,4 +16,4 @@
     dest: "{{ ansible_user_dir }}/.gitconfig"
   vars:
     email: "{{ git_email }}"
-    name: "{{ git_name }}"
+    git_user_name: "{{ git_name }}"

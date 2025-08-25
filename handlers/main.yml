@@ -1,3 +1,5 @@
 ---
-- ansible.builtin.import_tasks: apt_upgrade.yml
-- ansible.builtin.import_tasks: services.yml
+- name: Import apt upgrade handlers
+  ansible.builtin.import_tasks: apt_upgrade.yml
+- name: Import service handlers
+  ansible.builtin.import_tasks: services.yml

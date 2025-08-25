@@ -2,7 +2,8 @@
 - name: If run in X.org
   when: ansible_env.DISPLAY is defined
   block:
-    - vars:
+    - name: Firefox profile configuration
+      vars:
         firefox_basedir: "{{ ansible_user_dir }}/snap/firefox/common/.mozilla/firefox"
         firefox_profile_paths: "{{ lookup('file', firefox_basedir ~ '/profiles.ini') | regex_findall('^Path=(.*\\.' ~ firefox_profiles | join('|.*\\.') ~ ')$', multiline=True)
           }}"
