@@ -1,4 +1,4 @@
-# Ansible Workstation
+# Stable-Bot
 
 [![CI](https://github.com/Shi-Raida/workstation/actions/workflows/ci.yml/badge.svg)](https://github.com/Shi-Raida/workstation/actions/workflows/ci.yml)
 

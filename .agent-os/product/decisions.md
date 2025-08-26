@@ -15,7 +15,7 @@
 
 ### Decision
 
-Agent OS will be positioned as an Ansible-based workstation automation platform focused on Linux development environments, prioritizing comprehensive automation coverage over cross-platform compatibility in initial phases.
+Stable-Bot will be positioned as an Ansible-based workstation automation platform focused on Linux development environments, prioritizing comprehensive automation coverage over cross-platform compatibility in initial phases.
 
 ### Context
 
@@ -59,17 +59,17 @@ Current tech stack provides proven reliability and extensive community support. 
 
 ### Decision
 
-Migrate from GitLab CI to GitHub Actions while maintaining existing release automation and testing capabilities.
+Migrate from GitLab CI to GitHub Actions while maintaining existing release automation and testing capabilities for Stable-Bot.
 
 ### Context
 
-Current GitLab CI pipeline provides automated testing and semantic versioning. GitHub Actions migration aligns with broader ecosystem trends and improves integration with Agent-OS project structure.
+Current GitLab CI pipeline provides automated testing and semantic versioning. GitHub Actions migration aligns with broader ecosystem trends and improves integration with Stable-Bot project structure.
 
 ### Rationale
 
 - GitHub Actions provides native integration with GitHub-hosted repositories
 - Simplifies dependency management and reduces external service dependencies
-- Enables better integration with Agent-OS ecosystem and tooling
+- Enables better integration with Stable-Bot ecosystem and tooling
 - Maintains existing automation capabilities while improving accessibility
 
 ## 2025-08-25: Desktop Environment Philosophy

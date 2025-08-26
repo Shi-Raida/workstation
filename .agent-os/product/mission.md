@@ -5,7 +5,7 @@
 
 ## Pitch
 
-Ansible Workstation is a comprehensive automation framework designed to reproduce and synchronize workspace environments across multiple computers and servers. It eliminates the pain of manual environment setup and configuration drift by providing a declarative, version-controlled approach to workspace management.
+Stable-Bot is a comprehensive automation framework designed to reproduce and synchronize workspace environments across multiple computers and servers. It eliminates the pain of manual environment setup and configuration drift by providing a declarative, version-controlled approach to workspace management.
 
 ## Users
 
