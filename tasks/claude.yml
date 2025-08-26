@@ -1,4 +1,3 @@
----
 - name: Check Node.js version for Claude Code CLI
   ansible.builtin.command: node --version
   register: node_version_check
@@ -8,7 +7,7 @@
   ansible.builtin.assert:
     that:
       - node_version_check.stdout is version('v18.0.0', '>=')
-    fail_msg: "Node.js version 18+ is required for Claude Code CLI"
+    fail_msg: Node.js version 18+ is required for Claude Code CLI
 
 - name: Create .claude directory structure
   ansible.builtin.file:
@@ -56,7 +55,7 @@
 
 - name: Copy Claude configuration files
   ansible.builtin.copy:
-    src: "claude/"
+    src: claude/
     dest: "{{ ansible_user_dir }}/.claude/"
     mode: '0644'
     directory_mode: '0755'
@@ -76,7 +75,7 @@
     that:
       - claude_cli_verification.stat.exists
       - claude_cli_verification.stat.executable
-    fail_msg: "Claude CLI installation verification failed"
+    fail_msg: Claude CLI installation verification failed
 
 - name: Test Claude CLI basic functionality
   ansible.builtin.command: "{{ ansible_user_dir }}/.local/bin/claude --version"

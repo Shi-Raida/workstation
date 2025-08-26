@@ -51,14 +51,14 @@ class WidgetName extends StatelessWidget {
   // Fields
   final String text;
   final void Function()? onPressed;
-  
+
   // Constructor
   const WidgetName({
     super.key,
     required this.text,
     required this.onPressed,
   });
-  
+
   // Build method
   @override
   Widget build(BuildContext context) {

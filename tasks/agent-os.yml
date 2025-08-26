@@ -1,4 +1,3 @@
----
 - name: Create .agent-os directory structure
   ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.agent-os/{{ item }}"
@@ -13,14 +12,14 @@
 
 - name: Copy Agent-OS instruction files
   ansible.builtin.copy:
-    src: "agent-os/instructions/"
+    src: agent-os/instructions/
     dest: "{{ ansible_user_dir }}/.agent-os/instructions/"
     mode: '0644'
     directory_mode: '0755'
 
 - name: Copy Agent-OS standards files
   ansible.builtin.copy:
-    src: "agent-os/standards/"
+    src: agent-os/standards/
     dest: "{{ ansible_user_dir }}/.agent-os/standards/"
     mode: '0644'
     directory_mode: '0755'
@@ -35,7 +34,7 @@
     that:
       - agent_os_verification.stat.exists
       - agent_os_verification.stat.isreg
-    fail_msg: "Agent-OS installation verification failed"
+    fail_msg: Agent-OS installation verification failed
 
 - name: Set Agent-OS directory permissions
   ansible.builtin.file:

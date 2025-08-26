@@ -1,4 +1,3 @@
----
 - name: Fail if OS is not Debian or Ubuntu
   ansible.builtin.fail:
     msg: This is not Debian or Ubuntu.

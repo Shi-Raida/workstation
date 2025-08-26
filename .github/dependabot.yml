@@ -1,33 +1,33 @@
 version: 2
 updates:
   # Enable version updates for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "weekly"
+      interval: weekly
     commit-message:
-      prefix: "chore"
-      include: "scope"
+      prefix: chore
+      include: scope
     assignees:
-      - "Shi-Raida"
+      - Shi-Raida
     reviewers:
-      - "Shi-Raida"
-    
+      - Shi-Raida
+
   # Enable version updates for npm dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "weekly"
+      interval: weekly
     commit-message:
-      prefix: "chore"
-      include: "scope"
+      prefix: chore
+      include: scope
     assignees:
-      - "Shi-Raida"
+      - Shi-Raida
     reviewers:
-      - "Shi-Raida"
+      - Shi-Raida
     ignore:
       # Ignore major version updates for semantic-release to avoid breaking changes
-      - dependency-name: "semantic-release"
+      - dependency-name: semantic-release
         update-types: ["version-update:semver-major"]
       - dependency-name: "@semantic-release/*"
         update-types: ["version-update:semver-major"]

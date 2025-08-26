@@ -13,5 +13,5 @@ call plug#begin('~/.vim/plugged')
 
     " i3
     Plug 'mboughaba/i3config.vim'
- 
+
 call plug#end()

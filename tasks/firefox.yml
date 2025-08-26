@@ -1,12 +1,13 @@
----
 - name: If run in X.org
   when: ansible_env.DISPLAY is defined
   block:
     - name: Firefox profile configuration
       vars:
         firefox_basedir: "{{ ansible_user_dir }}/snap/firefox/common/.mozilla/firefox"
-        firefox_profile_paths: "{{ lookup('file', firefox_basedir ~ '/profiles.ini') | regex_findall('^Path=(.*\\.' ~ firefox_profiles | join('|.*\\.') ~ ')$', multiline=True)
-          }}"
+        firefox_profile_paths: >-
+          {{ lookup('file', firefox_basedir ~ '/profiles.ini') |
+             regex_findall('^Path=(.*\\.' ~ firefox_profiles | join('|.*\\.') ~ ')$',
+             multiline=True) }}
 
       block:
         - name: Install Firefox
@@ -31,7 +32,7 @@
 
         - name: Copy the Firefox preferences
           ansible.builtin.copy:
-            src: "firefox/prefs.js"
+            src: firefox/prefs.js
             dest: "{{ firefox_basedir }}/{{ item }}/prefs.js"
           with_items: "{{ firefox_profile_paths }}"
 
@@ -43,7 +44,7 @@
 
         - name: Get Firefox addon information from api
           ansible.builtin.uri:
-            url: "https://services.addons.mozilla.org/api/v4/addons/addon/{{ item }}/"
+            url: https://services.addons.mozilla.org/api/v4/addons/addon/{{ item }}/
             return_content: true
           register: firefox_addon_info
           with_items: "{{ firefox_addons }}"

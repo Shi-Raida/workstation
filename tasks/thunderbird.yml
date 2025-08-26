@@ -1,10 +1,11 @@
----
 - name: If run in X.org
   when: ansible_env.DISPLAY is defined
   vars:
     thunderbird_basedir: "{{ ansible_user_dir }}/snap/thunderbird/common/.thunderbird"
-    thunderbird_profile_paths: "{{ lookup('file', thunderbird_basedir ~ '/profiles.ini') | regex_findall('^Path=(.*\\.' ~ thunderbird_profiles | join('|.*\\.') ~
-      ')$', multiline=True) }}"
+    thunderbird_profile_paths: >-
+      {{ lookup('file', thunderbird_basedir ~ '/profiles.ini') |
+         regex_findall('^Path=(.*\\.' ~ thunderbird_profiles | join('|.*\\.') ~ ')$',
+         multiline=True) }}
   block:
     - name: Install Thunderbird
       ansible.builtin.apt:
@@ -29,7 +30,7 @@
 
     - name: Copy the Thunderbird preferences
       ansible.builtin.copy:
-        src: "thunderbird/prefs.js"
+        src: thunderbird/prefs.js
         dest: "{{ thunderbird_basedir }}/{{ item }}/prefs.js"
       with_items: "{{ thunderbird_profile_paths }}"
 

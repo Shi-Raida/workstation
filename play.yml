@@ -1,12 +1,14 @@
----
-- hosts: localhost
+- name: Stable-Bot workstation provisioning playbook
+  hosts: localhost
   connection: local
 
   vars_files:
     - vars/main.yml
 
   handlers:
-    - ansible.builtin.import_tasks: handlers/main.yml
+    - name: Import main handlers
+      ansible.builtin.import_tasks: handlers/main.yml
   tasks:
-    - ansible.builtin.import_tasks: "{{ tasks_file }}"
+    - name: Import main tasks
+      ansible.builtin.import_tasks: "{{ tasks_file }}"
       environment: "{{ env }}"

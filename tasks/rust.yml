@@ -1,4 +1,3 @@
----
 - name: Rust toolchain installation
   vars:
     rustup_file: "{{ ansible_user_dir }}/.cargo/bin/rustup"

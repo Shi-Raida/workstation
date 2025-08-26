@@ -1,4 +1,3 @@
----
 - name: Restart bluetooth service
   ansible.builtin.systemd:
     name: bluetooth
