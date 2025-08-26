@@ -56,7 +56,7 @@ jobs:
         with:
           name: gitleaks-report
           path: gitleaks-report.json
-          retention-days: 7
+          retention-days: 3
 
   python-security:
     name: Python Security Analysis
@@ -102,7 +102,7 @@ jobs:
           path: |
             bandit-report.json
             python-files.txt
-          retention-days: 7
+          retention-days: 3
 
   dependency-scan:
     name: Dependency Vulnerability Scan
@@ -145,7 +145,7 @@ jobs:
         with:
           name: safety-report
           path: safety-report.json
-          retention-days: 7
+          retention-days: 3
 
   security-summary:
     name: Security Summary
@@ -164,92 +164,6 @@ jobs:
         with:
           pattern: "*-report"
           merge-multiple: true
-
-      - name: Generate security summary
-        run: |
-          echo "# 🛡️ Security Scan Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Scan Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Secrets Detection Summary
-          if [ -f gitleaks-report.json ]; then
-            SECRETS_COUNT=$(jq length gitleaks-report.json 2>/dev/null || echo "0")
-            if [ "$SECRETS_COUNT" -gt 0 ]; then
-              echo "## ❌ Secrets Detection (gitleaks)" >> $GITHUB_STEP_SUMMARY
-              echo "**Found $SECRETS_COUNT potential secrets!**" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "## ✅ Secrets Detection (gitleaks)" >> $GITHUB_STEP_SUMMARY
-              echo "No secrets detected" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "## ⚠️ Secrets Detection (gitleaks)" >> $GITHUB_STEP_SUMMARY
-            echo "No report generated" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          # Python Security Summary
-          if [ -f bandit-report.json ]; then
-            PYTHON_ISSUES=$(jq '.results | length' bandit-report.json 2>/dev/null || echo "0")
-            if [ "$PYTHON_ISSUES" -gt 0 ]; then
-              echo "## ⚠️ Python Security (bandit)" >> $GITHUB_STEP_SUMMARY
-              echo "Found $PYTHON_ISSUES potential security issues" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "## ✅ Python Security (bandit)" >> $GITHUB_STEP_SUMMARY
-              echo "No security issues detected" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "## ✅ Python Security (bandit)" >> $GITHUB_STEP_SUMMARY
-            echo "No Python files to scan" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          # Dependency Vulnerability Summary
-          if [ -f safety-report.json ]; then
-            VULN_COUNT=$(jq '.vulnerabilities | length' safety-report.json 2>/dev/null || echo "0")
-            if [ "$VULN_COUNT" -gt 0 ]; then
-              echo "## ⚠️ Dependency Vulnerabilities (safety)" >> $GITHUB_STEP_SUMMARY
-              echo "Found $VULN_COUNT vulnerable dependencies" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "## ✅ Dependency Vulnerabilities (safety)" >> $GITHUB_STEP_SUMMARY
-              echo "No vulnerable dependencies found" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "## ✅ Dependency Vulnerabilities (safety)" >> $GITHUB_STEP_SUMMARY
-            echo "No dependency files to scan" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          # Summary Table
-          echo "## 📊 Security Scan Status" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Security Check | Status | Result |" >> $GITHUB_STEP_SUMMARY
-          echo "|----------------|--------|--------|" >> $GITHUB_STEP_SUMMARY
-
-          # Individual job status
-          if [ "${{ needs.gitleaks-scan.result }}" == "success" ]; then
-            echo "| Secrets Detection | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "| Secrets Detection | ❌ | Failed |" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          if [ "${{ needs.python-security.result }}" == "success" ]; then
-            echo "| Python Security | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "| Python Security | ⚠️ | Issues Found |" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          if [ "${{ needs.dependency-scan.result }}" == "success" ]; then
-            echo "| Dependency Scan | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "| Dependency Scan | ⚠️ | Issues Found |" >> $GITHUB_STEP_SUMMARY
-          fi
 
       - name: Determine overall result
         id: determine-result

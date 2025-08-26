@@ -64,7 +64,7 @@ jobs:
         with:
           name: yamllint-report
           path: yamllint-report.txt
-          retention-days: 7
+          retention-days: 3
 
   shell-lint:
     name: Shell Script Validation
@@ -146,7 +146,7 @@ jobs:
         with:
           name: ansible-lint-report-${{ matrix.python-version }}
           path: ansible-lint-report-${{ matrix.python-version }}.txt
-          retention-days: 7
+          retention-days: 3
 
   lint-summary:
     name: Linting Summary
@@ -165,94 +165,6 @@ jobs:
         with:
           pattern: "*lint-report*"
           merge-multiple: true
-
-      - name: Generate linting summary
-        run: |
-          echo "# 📝 Code Linting Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Scan Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # YAML Lint Summary
-          if [ -f yamllint-report.txt ]; then
-            if [ -s yamllint-report.txt ]; then
-              YAML_ISSUES=$(wc -l < yamllint-report.txt)
-              echo "## ⚠️ YAML Validation (yamllint)" >> $GITHUB_STEP_SUMMARY
-              echo "Found $YAML_ISSUES formatting/style issues" >> $GITHUB_STEP_SUMMARY
-              echo "<details><summary>View issues</summary>" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo '```' >> $GITHUB_STEP_SUMMARY
-              head -10 yamllint-report.txt >> $GITHUB_STEP_SUMMARY
-              if [ $YAML_ISSUES -gt 10 ]; then
-                echo "... and $(($YAML_ISSUES - 10)) more issues" >> $GITHUB_STEP_SUMMARY
-              fi
-              echo '```' >> $GITHUB_STEP_SUMMARY
-              echo "</details>" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "## ✅ YAML Validation (yamllint)" >> $GITHUB_STEP_SUMMARY
-              echo "No YAML formatting issues found" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "## ⚠️ YAML Validation (yamllint)" >> $GITHUB_STEP_SUMMARY
-            echo "No report generated" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          # Shell Lint Summary
-          echo "## 🐚 Shell Script Validation (shellcheck)" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ needs.shell-lint.result }}" == "success" ]; then
-            echo "No shell script issues found" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Shell script issues detected - check job logs for details" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Ansible Lint Summary
-          echo "## 🔧 Ansible Validation (ansible-lint)" >> $GITHUB_STEP_SUMMARY
-          ANSIBLE_TOTAL_ISSUES=0
-          ANSIBLE_FILES_WITH_ISSUES=0
-
-          for report in ansible-lint-report-*.txt; do
-            if [ -f "$report" ] && [ -s "$report" ]; then
-              ISSUES=$(wc -l < "$report")
-              ANSIBLE_TOTAL_ISSUES=$((ANSIBLE_TOTAL_ISSUES + ISSUES))
-              ANSIBLE_FILES_WITH_ISSUES=$((ANSIBLE_FILES_WITH_ISSUES + 1))
-            fi
-          done
-
-          if [ $ANSIBLE_TOTAL_ISSUES -gt 0 ]; then
-            echo "Found $ANSIBLE_TOTAL_ISSUES Ansible issues across $ANSIBLE_FILES_WITH_ISSUES Python versions" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "No Ansible validation issues found" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Summary Table
-          echo "## 📊 Linting Status" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Lint Check | Status | Result |" >> $GITHUB_STEP_SUMMARY
-          echo "|------------|--------|--------|" >> $GITHUB_STEP_SUMMARY
-
-          # Individual job status
-          if [ "${{ needs.yaml-lint.result }}" == "success" ]; then
-            echo "| YAML Validation | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "| YAML Validation | ⚠️ | Issues Found |" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          if [ "${{ needs.shell-lint.result }}" == "success" ]; then
-            echo "| Shell Script Validation | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "| Shell Script Validation | ⚠️ | Issues Found |" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          if [ "${{ needs.ansible-lint.result }}" == "success" ]; then
-            echo "| Ansible Validation | ✅ | Passed |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "| Ansible Validation | ⚠️ | Issues Found |" >> $GITHUB_STEP_SUMMARY
-          fi
 
       - name: Determine overall result
         id: determine-result

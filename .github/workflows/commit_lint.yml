@@ -69,29 +69,6 @@ jobs:
           fi
         continue-on-error: false
 
-      - name: Generate commit lint summary
-        if: always()
-        run: |
-          echo "# 📝 Commit Message Validation" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Validation Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "${{ steps.lint.outcome }}" == "success" ]; then
-            echo "## ✅ Commit Messages Valid" >> $GITHUB_STEP_SUMMARY
-            echo "All commit messages follow the conventional commit format" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "## ❌ Commit Messages Invalid" >> $GITHUB_STEP_SUMMARY
-            echo "Some commit messages do not follow the conventional commit format" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Required Format:" >> $GITHUB_STEP_SUMMARY
-            echo "- \`type(scope): description\`" >> $GITHUB_STEP_SUMMARY
-            echo "- **Types:** feat, fix, docs, style, refactor, test, chore" >> $GITHUB_STEP_SUMMARY
-            echo "- **Example:** \`feat: add user authentication system\`" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "*For more details, see [Conventional Commits](https://www.conventionalcommits.org/)*" >> $GITHUB_STEP_SUMMARY
 
   # Placeholder job for non-PR events to maintain workflow consistency
   commitlint-skip:
@@ -106,9 +83,3 @@ jobs:
         run: |
           echo "⏭️ Commit linting only runs on pull requests"
           echo "Current event: ${{ github.event_name }}"
-
-          echo "# 📝 Commit Message Validation" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## ⏭️ Skipped" >> $GITHUB_STEP_SUMMARY
-          echo "Commit message validation only runs on pull requests" >> $GITHUB_STEP_SUMMARY
-          echo "**Current event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY

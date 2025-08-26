@@ -105,39 +105,6 @@ jobs:
           npx semantic-release
         continue-on-error: false
 
-      - name: Generate release summary
-        if: always()
-        run: |
-          echo "# 🚀 Release Workflow" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Release Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "${{ steps.release.outcome }}" == "success" ]; then
-            if [ -n "${{ steps.release.outputs.new_release_version }}" ]; then
-              echo "## ✅ Release Published" >> $GITHUB_STEP_SUMMARY
-              echo "**New Version:** v${{ steps.release.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "### Changes Released:" >> $GITHUB_STEP_SUMMARY
-              echo "- Changelog updated automatically" >> $GITHUB_STEP_SUMMARY
-              echo "- Git tag created" >> $GITHUB_STEP_SUMMARY
-              echo "- GitHub release published" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "## ⏭️ No Release Needed" >> $GITHUB_STEP_SUMMARY
-              echo "No new commits warrant a release" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "## ❌ Release Failed" >> $GITHUB_STEP_SUMMARY
-            echo "Semantic release encountered an error - check job logs" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Prerequisites Status:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Security Scan:** ${{ inputs.security-result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Code Linting:** ${{ inputs.code-lint-result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit Linting:** ${{ inputs.commit-lint-result }}" >> $GITHUB_STEP_SUMMARY
 
   # Placeholder job for non-main branch or non-push events
   release-skip:
@@ -154,10 +121,3 @@ jobs:
           echo "⏭️ Release only runs on main branch pushes"
           echo "Current branch: ${{ github.ref_name }}"
           echo "Current event: ${{ github.event_name }}"
-
-          echo "# 🚀 Release Workflow" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## ⏭️ Skipped" >> $GITHUB_STEP_SUMMARY
-          echo "Release only runs on pushes to the main branch" >> $GITHUB_STEP_SUMMARY
-          echo "**Current branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Current event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
