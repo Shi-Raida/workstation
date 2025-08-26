@@ -16,4 +16,4 @@
     dest: "{{ ansible_user_dir }}/.gitconfig"
   vars:
     email: "{{ git_email }}"
-    name: "{{ git_name }}"
+    user_name: "{{ git_name }}"
