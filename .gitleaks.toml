@@ -1,0 +1,108 @@
+# Gitleaks configuration for Ansible workstation provisioning
+# Detects secrets and credentials in configuration files, playbooks, and templates
+
+title = "gitleaks config for workstation provisioning"
+
+# Global settings - use default rules plus custom ones
+[extend]
+useDefault = true
+
+# Additional rules for Ansible-specific secrets
+[[rules]]
+id = "ansible-vault-password"
+description = "Ansible Vault Password"
+regex = '''(?i)(vault[_-]?pass|vault[_-]?password)['"]*\s*[:=]\s*['"][^'"]{8,}['"]'''
+keywords = ["vault_password", "vault-password", "vaultpass"]
+
+[[rules]]
+id = "ansible-become-password"
+description = "Ansible Become Password"
+regex = '''(?i)(become[_-]?pass|become[_-]?password|ansible[_-]?become[_-]?pass)['"]*\s*[:=]\s*['"][^'"]{6,}['"]'''
+keywords = ["become_password", "become-password", "ansible_become_pass"]
+
+[[rules]]
+id = "ssh-private-key-content"
+description = "SSH Private Key Content"
+regex = '''-----BEGIN[\s\S]*PRIVATE KEY-----'''
+keywords = ["BEGIN RSA PRIVATE KEY", "BEGIN OPENSSH PRIVATE KEY", "BEGIN EC PRIVATE KEY"]
+
+[[rules]]
+id = "mysql-connection-string"
+description = "MySQL Connection String"
+regex = '''mysql://[^:]+:[^@]+@[^/]+'''
+keywords = ["mysql://"]
+
+[[rules]]
+id = "postgresql-connection-string"
+description = "PostgreSQL Connection String"
+regex = '''postgres(ql)?://[^:]+:[^@]+@[^/]+'''
+keywords = ["postgresql://", "postgres://"]
+
+[[rules]]
+id = "api-key-pattern"
+description = "Generic API Key Pattern"
+regex = '''(?i)(api[_-]?key|apikey)['"]*\s*[:=]\s*['"][a-zA-Z0-9_-]{16,}['"]'''
+keywords = ["api_key", "api-key", "apikey"]
+
+[[rules]]
+id = "secret-token-pattern"
+description = "Generic Secret Token Pattern"
+regex = '''(?i)(secret[_-]?token|token[_-]?secret)['"]*\s*[:=]\s*['"][a-zA-Z0-9_-]{16,}['"]'''
+keywords = ["secret_token", "token_secret", "secret-token"]
+
+[[rules]]
+id = "docker-registry-auth"
+description = "Docker Registry Authentication"
+regex = '''(?i)(docker[_-]?registry[_-]?auth|registry[_-]?password)['"]*\s*[:=]\s*['"][^'"]{8,}['"]'''
+keywords = ["docker_registry_auth", "registry_password"]
+
+# File type allowlists (files that should be scanned)
+[allowlist]
+description = "Global allowlist"
+files = [
+    '''(?i)\.gitleaks\.toml$''',
+    '''(?i)readme\.md$''',
+    '''(?i)changelog\.md$''',
+    '''files/firefox/stylus\.json$''',
+]
+
+# Path-based allowlists
+paths = [
+    '''\.venv/''',
+    '''node_modules/''',
+    '''\.git/''',
+    '''\.ansible/tmp/''',
+]
+
+# Regex-based allowlists for specific patterns
+regexes = [
+    '''password:\s*""\s*#\s*placeholder''',
+    '''password:\s*null\s*#\s*will be set''',
+    '''password:\s*"\{\{.*vault.*\}\}"''',
+    '''password:\s*"\{\{\s*ansible_become_pass.*\}\}"''',
+    '''example[_-]?password''',
+    '''dummy[_-]?secret''',
+    '''test[_-]?api[_-]?key''',
+    '''placeholder[_-]?token''',
+]
+
+# Entropy settings for better detection
+[entropy]
+group1 = '''["']([a-zA-Z0-9+/]{32,})["']'''
+group2 = '''["']([a-zA-Z0-9+/]{16,})["']'''
+
+# Additional keywords to look for
+keywords = [
+    "password",
+    "secret",
+    "token",
+    "key",
+    "pass",
+    "auth",
+    "credential",
+    "vault_password",
+    "become_password",
+    "private_key",
+    "api_key",
+    "access_token",
+]

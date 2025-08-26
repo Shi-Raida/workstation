@@ -1,0 +1,214 @@
+name: General
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feat/*'
+      - 'fix/*'
+      - 'hotfix/*'
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+  pull-requests: write
+  checks: write
+  security-events: write
+  id-token: write
+
+env:
+  PIP_CACHE_DIR: "${{ github.workspace }}/.cache/pip"
+
+jobs:
+  security-scan:
+    name: Security Analysis
+    uses: ./.github/workflows/security.yml
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      checks: write
+
+  code-lint:
+    name: Code Quality & Linting
+    uses: ./.github/workflows/code_lint.yml
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+
+  commit-lint:
+    name: Commit Message Validation
+    uses: ./.github/workflows/commit_lint.yml
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: write
+
+  release:
+    name: Release Management
+    needs: [security-scan, code-lint, commit-lint]
+    uses: ./.github/workflows/release.yml
+    with:
+      security-result: ${{ needs.security-scan.outputs.overall-result }}
+      code-lint-result: ${{ needs.code-lint.outputs.overall-result }}
+      commit-lint-result: ${{ needs.commit-lint.outputs.result }}
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+
+  summary:
+    name: CI Summary
+    if: always()
+    needs: [security-scan, code-lint, commit-lint, release]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate comprehensive CI summary
+        run: |
+          echo "# 🚀 CI Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Completed:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Workflow Results Overview
+          echo "## 📊 Workflow Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflow | Status | Result | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+
+          # Security Scan Results
+          if [[ "${{ needs.security-scan.result }}" == "failure" ]]; then
+            echo "| 🛡️ Security Scan | ❌ | Failed | Critical security issues found |" >> $GITHUB_STEP_SUMMARY
+            OVERALL_STATUS="failure"
+          elif [[ "${{ needs.security-scan.result }}" == "success" ]]; then
+            echo "| 🛡️ Security Scan | ✅ | Passed | No critical security issues |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 🛡️ Security Scan | ⏭️ | Skipped | Not executed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Code Lint Results
+          if [[ "${{ needs.code-lint.result }}" == "failure" ]]; then
+            echo "| 📝 Code Linting | ❌ | Failed | Critical linting issues found |" >> $GITHUB_STEP_SUMMARY
+            OVERALL_STATUS="failure"
+          elif [[ "${{ needs.code-lint.result }}" == "success" ]]; then
+            echo "| 📝 Code Linting | ✅ | Passed | Code quality checks passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 📝 Code Linting | ⏭️ | Skipped | Not executed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Commit Lint Results
+          if [[ "${{ needs.commit-lint.result }}" == "failure" ]]; then
+            echo "| 📝 Commit Linting | ❌ | Failed | Invalid commit messages |" >> $GITHUB_STEP_SUMMARY
+            OVERALL_STATUS="failure"
+          elif [[ "${{ needs.commit-lint.result }}" == "success" ]]; then
+            echo "| 📝 Commit Linting | ✅ | Passed | Valid commit messages |" >> $GITHUB_STEP_SUMMARY
+          elif [[ "${{ needs.commit-lint.result }}" == "skipped" ]]; then
+            echo "| 📝 Commit Linting | ⏭️ | Skipped | Not applicable for push events |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Release Results
+          if [[ "${{ needs.release.result }}" == "failure" ]]; then
+            echo "| 🚀 Release | ❌ | Failed | Release process failed |" >> $GITHUB_STEP_SUMMARY
+            OVERALL_STATUS="failure"
+          elif [[ "${{ needs.release.result }}" == "success" ]]; then
+            if [[ -n "${{ needs.release.outputs.version }}" ]]; then
+              echo "| 🚀 Release | ✅ | Published | Version ${{ needs.release.outputs.version }} |" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "| 🚀 Release | ✅ | No Release | No changes to release |" >> $GITHUB_STEP_SUMMARY
+            fi
+          elif [[ "${{ needs.release.result }}" == "skipped" ]]; then
+            echo "| 🚀 Release | ⏭️ | Skipped | Not on main branch |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Detailed Security Breakdown
+          echo "### 🛡️ Security Analysis Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Secrets Detection:** ${{ needs.security-scan.outputs.gitleaks-result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Python Security:** ${{ needs.security-scan.outputs.python-security-result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dependency Scan:** ${{ needs.security-scan.outputs.dependency-scan-result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Detailed Linting Breakdown
+          echo "### 📝 Code Quality Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **YAML Validation:** ${{ needs.code-lint.outputs.yaml-lint-result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Shell Script Validation:** ${{ needs.code-lint.outputs.shell-lint-result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Ansible Validation:** ${{ needs.code-lint.outputs.ansible-lint-result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Performance Metrics
+          echo "### ⚡ Performance" >> $GITHUB_STEP_SUMMARY
+          echo "- **Concurrent Workflows:** Security, Linting, and Commit validation run in parallel" >> $GITHUB_STEP_SUMMARY
+          echo "- **Modular Design:** Each workflow can be triggered independently" >> $GITHUB_STEP_SUMMARY
+          echo "- **Fail Fast:** Critical issues stop the pipeline early" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Next Steps
+          if [[ "$OVERALL_STATUS" == "failure" ]]; then
+            echo "### ❌ Action Required" >> $GITHUB_STEP_SUMMARY
+            echo "1. Review failed workflow details above" >> $GITHUB_STEP_SUMMARY
+            echo "2. Fix identified issues in your code" >> $GITHUB_STEP_SUMMARY
+            echo "3. Push changes to re-trigger CI pipeline" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ✅ All Checks Passed" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ github.ref_name }}" == "main" ]]; then
+              echo "- Code is ready for production deployment" >> $GITHUB_STEP_SUMMARY
+              if [[ -n "${{ needs.release.outputs.version }}" ]]; then
+                echo "- New version ${{ needs.release.outputs.version }} has been released" >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "- Code meets quality standards for merging" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Generated by CI Pipeline • $(date -u '+%Y-%m-%d %H:%M:%S UTC')*" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check overall workflow status
+        run: |
+          echo "🔍 Checking overall CI status..."
+
+          # Check for critical failures that should fail the entire workflow
+          if [[ "${{ needs.security-scan.result }}" == "failure" ]]; then
+            echo "❌ CI failed due to critical security issues"
+            exit 1
+          fi
+
+          if [[ "${{ needs.code-lint.result }}" == "failure" ]]; then
+            echo "❌ CI failed due to critical code quality issues"
+            exit 1
+          fi
+
+          if [[ "${{ needs.commit-lint.result }}" == "failure" ]]; then
+            echo "❌ CI failed due to invalid commit messages"
+            exit 1
+          fi
+
+          if [[ "${{ needs.release.result }}" == "failure" ]]; then
+            echo "❌ CI failed due to release issues"
+            exit 1
+          fi
+
+          echo "✅ All CI workflows completed successfully"

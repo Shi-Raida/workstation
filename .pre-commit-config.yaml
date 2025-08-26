@@ -1,0 +1,108 @@
+# Pre-commit hooks configuration for workstation provisioning security
+# See https://pre-commit.com for more information
+
+repos:
+  # Built-in hooks for basic checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: detect-private-key
+
+  # Gitleaks for secrets detection
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+        name: Detect secrets with gitleaks
+        description: Detect hardcoded secrets using Gitleaks
+        entry: gitleaks detect --source . --verbose --redact --config .gitleaks.toml
+        language: system
+        pass_filenames: false
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-c, .yamllint.yml]
+
+  # Ansible linting
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v25.8.2
+    hooks:
+      - id: ansible-lint
+        files: \.(yml|yaml)$
+        exclude: ^.github/
+        args: [-c, .ansible-lint]
+
+  # Python security linting with bandit
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.1
+    hooks:
+      - id: bandit
+        args: [-r, -f, json, --severity-level, medium]
+        files: \.py$
+
+  # Dockerfile security checks (if any Docker files exist)
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        name: Lint Dockerfiles with hadolint
+
+  # Local custom hooks
+  - repo: local
+    hooks:
+      # Check for hardcoded credentials in Ansible files
+      - id: ansible-no-plain-passwords
+        name: Check for plain text passwords in Ansible files
+        entry: bash -c 'grep -rn --include="*.yml" --include="*.yaml" --exclude-dir=".venv" --exclude-dir=".git" --exclude-dir="node_modules" -E "(password|secret|token):\s*[\"'\''][^\"'\''{}]+[\"'\'']" . && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      # Ensure vault files are encrypted
+      - id: ansible-vault-encrypted
+        name: Ensure Ansible vault files are encrypted
+        entry: bash -c 'find . -name "*vault*" -type f \( -name "*.yml" -o -name "*.yaml" \) -exec grep -L "\\$ANSIBLE_VAULT" {} \; | head -1 | grep -q . && echo "Unencrypted vault file found" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      # Check for sensitive files that shouldn't be committed
+      - id: check-sensitive-files
+        name: Check for sensitive files
+        entry: bash -c 'find . -name "*.pem" -o -name "*.key" -o -name "id_rsa*" -o -name "*.p12" -o -name "*.pfx" | grep -v ".venv" | head -1 | grep -q . && echo "Sensitive files found" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+# Global excludes
+exclude: |
+  (?x)(
+    \.venv/|
+    \.git/|
+    \.ansible/|
+    node_modules/|
+    \.pytest_cache/|
+    __pycache__/|
+    \.coverage|
+    \.tox/|
+    \.mypy_cache/|
+    build/|
+    dist/|
+    \.egg-info/
+  )
+
+# Hook configuration
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+default_stages: [pre-commit]
+minimum_pre_commit_version: '3.0.0'

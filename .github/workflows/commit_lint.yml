@@ -1,0 +1,114 @@
+name: Commit Lint
+
+on:
+  workflow_call:
+    outputs:
+      result:
+        description: "Result of commit linting"
+        value: ${{ jobs.commitlint.outputs.result }}
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+jobs:
+  commitlint:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    outputs:
+      result: ${{ steps.lint.outcome }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Install commitlint dependencies
+        run: |
+          npm install --save-dev @commitlint/cli @commitlint/config-conventional
+
+      - name: Run commitlint
+        id: lint
+        run: |
+          echo "📝 Validating commit messages with commitlint..."
+
+          # Get the base commit for commitlint range
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.sha }}"
+
+          echo "Checking commits from $BASE_SHA to $HEAD_SHA"
+
+          # Run commitlint and capture output
+          if npx commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose; then
+            echo "✅ All commit messages follow conventional commit format"
+          else
+            echo "❌ Some commit messages do not follow conventional commit format"
+            echo ""
+            echo "## Commit Message Guidelines"
+            echo "Please ensure your commit messages follow the conventional commit format:"
+            echo "- feat: new feature"
+            echo "- fix: bug fix"
+            echo "- docs: documentation changes"
+            echo "- style: formatting, missing semi colons, etc"
+            echo "- refactor: code change that neither fixes a bug nor adds a feature"
+            echo "- test: adding missing tests"
+            echo "- chore: maintain"
+            echo ""
+            echo "Example: 'feat: add user authentication system'"
+            exit 1
+          fi
+        continue-on-error: false
+
+      - name: Generate commit lint summary
+        if: always()
+        run: |
+          echo "# 📝 Commit Message Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Validation Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.lint.outcome }}" == "success" ]; then
+            echo "## ✅ Commit Messages Valid" >> $GITHUB_STEP_SUMMARY
+            echo "All commit messages follow the conventional commit format" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Commit Messages Invalid" >> $GITHUB_STEP_SUMMARY
+            echo "Some commit messages do not follow the conventional commit format" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Required Format:" >> $GITHUB_STEP_SUMMARY
+            echo "- \`type(scope): description\`" >> $GITHUB_STEP_SUMMARY
+            echo "- **Types:** feat, fix, docs, style, refactor, test, chore" >> $GITHUB_STEP_SUMMARY
+            echo "- **Example:** \`feat: add user authentication system\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*For more details, see [Conventional Commits](https://www.conventionalcommits.org/)*" >> $GITHUB_STEP_SUMMARY
+
+  # Placeholder job for non-PR events to maintain workflow consistency
+  commitlint-skip:
+    name: Commit Lint (Skipped)
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    outputs:
+      result: skipped
+
+    steps:
+      - name: Skip commit lint for non-PR events
+        run: |
+          echo "⏭️ Commit linting only runs on pull requests"
+          echo "Current event: ${{ github.event_name }}"
+
+          echo "# 📝 Commit Message Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ⏭️ Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "Commit message validation only runs on pull requests" >> $GITHUB_STEP_SUMMARY
+          echo "**Current event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY

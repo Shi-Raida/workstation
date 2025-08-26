@@ -1,0 +1,56 @@
+# yamllint configuration for Ansible workstation provisioning
+# Security-focused YAML linting rules
+
+extends: default
+
+rules:
+  # Allow longer lines for Ansible tasks with long command strings
+  line-length:
+    max: 120
+    level: warning
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+
+  # Allow multiple documents in YAML files (common in Ansible)
+  document-start:
+    present: false
+
+  # Be more lenient with comments formatting
+  comments:
+    min-spaces-from-content: 1
+    require-starting-space: true
+
+  # Allow quoted strings (needed for security and consistency)
+  quoted-strings: disable
+
+  # Ansible-specific indentation rules
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # Allow empty values (common in Ansible templates)
+  empty-values:
+    forbid-in-block-mappings: false
+    forbid-in-flow-mappings: true
+
+  # Be lenient with key duplication in certain contexts
+  key-duplicates: enable
+
+  # Bracket spacing rules
+  brackets:
+    max-spaces-inside: 1
+    max-spaces-inside-empty: 0
+
+  # Brace rules for dictionaries
+  braces:
+    max-spaces-inside: 1
+    max-spaces-inside-empty: 0
+
+# Files to ignore
+ignore: |
+  .venv/
+  .git/
+  .ansible/
+  node_modules/
+  *.log

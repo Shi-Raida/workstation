@@ -26,33 +26,33 @@ if git -C "$current_dir" rev-parse --git-dir >/dev/null 2>&1; then
     if [ -n "$branch" ]; then
         # Get git status information
         status_indicators=""
-        
+
         # Check for stashed changes ($) - put first
         if [ -n "$(git -C "$current_dir" stash list 2>/dev/null)" ]; then
             status_indicators="${status_indicators}$"
         fi
-        
+
         # Check for unstaged changes (!)
         if ! git -C "$current_dir" diff --quiet 2>/dev/null; then
             status_indicators="${status_indicators}!"
         fi
-        
+
         # Check for staged changes (+)
         if ! git -C "$current_dir" diff --cached --quiet 2>/dev/null; then
             status_indicators="${status_indicators}+"
         fi
-        
+
         # Check for untracked files (?)
         if [ -n "$(git -C "$current_dir" ls-files --others --exclude-standard 2>/dev/null)" ]; then
             status_indicators="${status_indicators}?"
         fi
-        
+
         # Check upstream status (ahead/behind/diverged)
         upstream=$(git -C "$current_dir" rev-parse --abbrev-ref @{upstream} 2>/dev/null)
         if [ -n "$upstream" ]; then
             ahead=$(git -C "$current_dir" rev-list --count HEAD..@{upstream} 2>/dev/null)
             behind=$(git -C "$current_dir" rev-list --count @{upstream}..HEAD 2>/dev/null)
-            
+
             if [ "$ahead" -gt 0 ] && [ "$behind" -gt 0 ]; then
                 status_indicators="${status_indicators}⇕"
             elif [ "$ahead" -gt 0 ]; then
@@ -61,7 +61,7 @@ if git -C "$current_dir" rev-parse --git-dir >/dev/null 2>&1; then
                 status_indicators="${status_indicators}⇡"
             fi
         fi
-        
+
         # Build status string with brackets if there are indicators
         if [ -n "$status_indicators" ]; then
             git_info="$branch"
@@ -82,14 +82,14 @@ if [ "$token_count" != "0" ] || [ "$input_tokens" != "0" ] || [ "$output_tokens"
     else
         total_tokens=$((input_tokens + output_tokens))
     fi
-    
+
     # Format token count (k for thousands)
     if [ "$total_tokens" -gt 999 ]; then
         formatted_tokens=$(echo "scale=1; $total_tokens / 1000" | bc)k
     else
         formatted_tokens="$total_tokens"
     fi
-    
+
     # Color coding based on token usage
     if [ "$exceeds_200k" = "true" ] || [ "$total_tokens" -gt 180000 ]; then
         # Red for danger zone (>180k or exceeds limit)
