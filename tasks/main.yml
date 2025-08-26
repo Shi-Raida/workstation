@@ -38,3 +38,6 @@
 - name: Setup Claude Code CLI
   ansible.builtin.import_tasks: claude.yml
   when: setup_claude_code | default(true)
+- name: Setup Agent-OS
+  ansible.builtin.import_tasks: agent-os.yml
+  when: setup_agent_os | default(true)
