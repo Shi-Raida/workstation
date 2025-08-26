@@ -22,7 +22,7 @@
 
 - name: Check if Claude CLI is already installed
   ansible.builtin.stat:
-    path: "{{ ansible_user_dir }}/.claude/local/claude"
+    path: "{{ ansible_user_dir }}/.local/bin/claude"
   register: existing_claude_cli
 
 - name: Download and install Claude Code CLI
@@ -44,7 +44,7 @@
     - name: Install Claude Code CLI
       ansible.builtin.shell: |
         cd "{{ claude_temp_dir.path }}"
-        bash install-claude.sh --install-dir="{{ ansible_user_dir }}/.claude/local"
+        bash install-claude.sh
       environment:
         HOME: "{{ ansible_user_dir }}"
       changed_when: true
@@ -68,7 +68,7 @@
 
 - name: Verify Claude CLI installation
   ansible.builtin.stat:
-    path: "{{ ansible_user_dir }}/.claude/local/claude"
+    path: "{{ ansible_user_dir }}/.local/bin/claude"
   register: claude_cli_verification
 
 - name: Assert Claude CLI is properly installed
@@ -79,7 +79,7 @@
     fail_msg: "Claude CLI installation verification failed"
 
 - name: Test Claude CLI basic functionality
-  ansible.builtin.command: "{{ ansible_user_dir }}/.claude/local/claude --version"
+  ansible.builtin.command: "{{ ansible_user_dir }}/.local/bin/claude --version"
   register: claude_version_test
   changed_when: false
   failed_when: claude_version_test.rc != 0

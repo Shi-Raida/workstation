@@ -86,8 +86,7 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 ## Claude Code
 ##
 
-export PATH="$HOME/.claude/local:$PATH"
-alias claude="$HOME/.claude/local/claude"
+alias claude="$HOME/.local/bin/claude"
 alias cc="claude"
 alias claude-code="claude"
 alias plan="claude --permission-mode plan"
