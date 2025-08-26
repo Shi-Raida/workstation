@@ -5,16 +5,13 @@ on:
     outputs:
       gitleaks-result:
         description: "Result of gitleaks scan"
-        value: ${{ jobs.security-summary.outputs.gitleaks-result }}
+        value: ${{ jobs.gitleaks-scan.outputs.result }}
       python-security-result:
         description: "Result of Python security scan"
-        value: ${{ jobs.security-summary.outputs.python-security-result }}
+        value: ${{ jobs.python-security.outputs.result }}
       dependency-scan-result:
         description: "Result of dependency vulnerability scan"
-        value: ${{ jobs.security-summary.outputs.dependency-scan-result }}
-      overall-result:
-        description: "Overall security scan result"
-        value: ${{ jobs.security-summary.outputs.overall-result }}
+        value: ${{ jobs.dependency-scan.outputs.result }}
 
 permissions:
   actions: read
@@ -146,33 +143,3 @@ jobs:
           name: safety-report
           path: safety-report.json
           retention-days: 3
-
-  security-summary:
-    name: Security Summary
-    runs-on: ubuntu-latest
-    needs: [gitleaks-scan, python-security, dependency-scan]
-    if: always()
-    outputs:
-      gitleaks-result: ${{ needs.gitleaks-scan.outputs.result }}
-      python-security-result: ${{ needs.python-security.outputs.result }}
-      dependency-scan-result: ${{ needs.dependency-scan.outputs.result }}
-      overall-result: ${{ steps.determine-result.outputs.result }}
-
-    steps:
-      - name: Download all security reports
-        uses: actions/download-artifact@v4
-        with:
-          pattern: "*-report"
-          merge-multiple: true
-
-      - name: Determine overall result
-        id: determine-result
-        run: |
-          # Security scan fails only if gitleaks fails (critical security issue)
-          # Other security issues are warnings but don't fail the workflow
-          if [ "${{ needs.gitleaks-scan.result }}" != "success" ]; then
-            echo "result=failure" >> $GITHUB_OUTPUT
-            exit 1
-          else
-            echo "result=success" >> $GITHUB_OUTPUT
-          fi

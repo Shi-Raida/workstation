@@ -5,16 +5,13 @@ on:
     outputs:
       yaml-lint-result:
         description: "Result of YAML linting"
-        value: ${{ jobs.lint-summary.outputs.yaml-lint-result }}
+        value: ${{ jobs.yaml-lint.outputs.result }}
       shell-lint-result:
         description: "Result of shell script linting"
-        value: ${{ jobs.lint-summary.outputs.shell-lint-result }}
+        value: ${{ jobs.shell-lint.outputs.result }}
       ansible-lint-result:
         description: "Result of Ansible linting"
-        value: ${{ jobs.lint-summary.outputs.ansible-lint-result }}
-      overall-result:
-        description: "Overall linting result"
-        value: ${{ jobs.lint-summary.outputs.overall-result }}
+        value: ${{ jobs.ansible-lint.result }}
 
 permissions:
   actions: read
@@ -147,35 +144,3 @@ jobs:
           name: ansible-lint-report-${{ matrix.python-version }}
           path: ansible-lint-report-${{ matrix.python-version }}.txt
           retention-days: 3
-
-  lint-summary:
-    name: Linting Summary
-    runs-on: ubuntu-latest
-    needs: [yaml-lint, shell-lint, ansible-lint]
-    if: always()
-    outputs:
-      yaml-lint-result: ${{ needs.yaml-lint.outputs.result }}
-      shell-lint-result: ${{ needs.shell-lint.outputs.result }}
-      ansible-lint-result: ${{ needs.ansible-lint.result }}
-      overall-result: ${{ steps.determine-result.outputs.result }}
-
-    steps:
-      - name: Download all linting reports
-        uses: actions/download-artifact@v4
-        with:
-          pattern: "*lint-report*"
-          merge-multiple: true
-
-      - name: Determine overall result
-        id: determine-result
-        run: |
-          # Linting issues are generally warnings, not failures
-          # Only fail if there are severe issues that prevent proper functioning
-          if [ "${{ needs.ansible-lint.result }}" == "failure" ]; then
-            echo "result=failure" >> $GITHUB_OUTPUT
-            echo "❌ Critical Ansible linting issues found"
-            exit 1
-          else
-            echo "result=success" >> $GITHUB_OUTPUT
-            echo "✅ Linting completed - issues are warnings only"
-          fi
