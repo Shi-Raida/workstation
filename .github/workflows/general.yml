@@ -157,13 +157,6 @@ jobs:
           echo "- **Ansible Validation:** ${{ needs.code-lint.outputs.ansible-lint-result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Performance Metrics
-          echo "### ⚡ Performance" >> $GITHUB_STEP_SUMMARY
-          echo "- **Concurrent Workflows:** Security, Linting, and Commit validation run in parallel" >> $GITHUB_STEP_SUMMARY
-          echo "- **Modular Design:** Each workflow can be triggered independently" >> $GITHUB_STEP_SUMMARY
-          echo "- **Fail Fast:** Critical issues stop the pipeline early" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
           # Next Steps
           if [[ "$OVERALL_STATUS" == "failure" ]]; then
             echo "### ❌ Action Required" >> $GITHUB_STEP_SUMMARY
