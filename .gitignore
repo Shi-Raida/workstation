@@ -6,6 +6,9 @@
 ### Ansible ###
 *.retry
 
+# Ansible Vault password file (contains sensitive password)
+.vault_pass
+
 ### Vagrant ###
 # General
 .vagrant/
