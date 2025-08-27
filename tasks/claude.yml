@@ -25,7 +25,7 @@
   register: existing_claude_cli
 
 - name: Download and install Claude Code CLI
-  when: not existing_claude_cli.stat.exists and claude_install_cli | default(true)
+  when: not existing_claude_cli.stat.exists and components.claude.install_cli | default(true)
   block:
     - name: Create temporary directory for Claude installer
       ansible.builtin.tempfile:

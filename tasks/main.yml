@@ -10,33 +10,46 @@
 
 - name: Setup APT packages
   ansible.builtin.import_tasks: apt.yml
+  when: components.apt.enabled | default(true)
 - name: Setup Snap packages
   ansible.builtin.import_tasks: snap.yml
+  when: components.snap.enabled | default(true)
 - name: Setup Ansible
   ansible.builtin.import_tasks: ansible.yml
+  when: components.ansible.enabled | default(true)
 - name: Setup user account
   ansible.builtin.import_tasks: user.yml
+  when: components.user.enabled | default(true)
 - name: Setup configuration files
   ansible.builtin.import_tasks: config.yml
+  when: components.config.enabled | default(true)
 - name: Setup Firefox
   ansible.builtin.import_tasks: firefox.yml
+  when: components.firefox.enabled | default(true)
 - name: Setup fonts
   ansible.builtin.import_tasks: fonts.yml
+  when: components.fonts.enabled | default(true)
 - name: Setup Git
   ansible.builtin.import_tasks: git.yml
+  when: components.git.enabled | default(true)
 - name: Setup i3 window manager
   ansible.builtin.import_tasks: i3.yml
+  when: components.i3.enabled | default(true)
 - name: Setup Zsh shell
   ansible.builtin.import_tasks: zsh.yml
+  when: components.zsh.enabled | default(true)
 - name: Setup Neovim
   ansible.builtin.import_tasks: neovim.yml
+  when: components.neovim.enabled | default(true)
 - name: Setup Rust toolchain
   ansible.builtin.import_tasks: rust.yml
+  when: components.rust.enabled | default(true)
 - name: Setup Thunderbird
   ansible.builtin.import_tasks: thunderbird.yml
+  when: components.thunderbird.enabled | default(true)
 - name: Setup Claude Code CLI
   ansible.builtin.import_tasks: claude.yml
-  when: setup_claude_code | default(true)
+  when: components.claude.enabled | default(true)
 - name: Setup Agent-OS
   ansible.builtin.import_tasks: agent-os.yml
-  when: setup_agent_os | default(true)
+  when: components.agent_os.enabled | default(true)

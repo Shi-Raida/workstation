@@ -162,7 +162,39 @@ env:
 
 # =============================== Claude Code ================================ #
 
-setup_agent_os: true
-setup_claude_code: true
-claude_install_cli: true
 claude_cli_installer_url: "https://claude.ai/install.sh"
+
+# =============================== Components ================================= #
+
+components:
+  apt:
+    enabled: true
+  snap:
+    enabled: true
+  ansible:
+    enabled: true
+  user:
+    enabled: true
+  config:
+    enabled: true
+  firefox:
+    enabled: true
+  fonts:
+    enabled: true
+  git:
+    enabled: true
+  i3:
+    enabled: true
+  zsh:
+    enabled: true
+  neovim:
+    enabled: true
+  rust:
+    enabled: true
+  thunderbird:
+    enabled: true
+  claude:
+    enabled: true
+    install_cli: true
+  agent_os:
+    enabled: true
