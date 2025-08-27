@@ -59,7 +59,8 @@ run_gitleaks_scan() {
     else
         local exit_code=$?
         if [ -f "$report_file" ] && [ -s "$report_file" ]; then
-            local secrets_count=$(jq length "$report_file" 2>/dev/null || echo "unknown")
+            local secrets_count
+            secrets_count=$(jq length "$report_file" 2>/dev/null || echo "unknown")
             print_error "Gitleaks found $secrets_count potential secrets!"
             print_warning "Review the report at: $report_file"
             return $exit_code
@@ -92,7 +93,8 @@ run_python_scans() {
             print_success "Bandit scan completed"
         else
             if [ -f "$bandit_report" ]; then
-                local issues_count=$(jq '.results | length' "$bandit_report" 2>/dev/null || echo "0")
+                local issues_count
+                issues_count=$(jq '.results | length' "$bandit_report" 2>/dev/null || echo "0")
                 print_warning "Bandit found $issues_count potential security issues"
             else
                 print_error "Bandit scan failed"
@@ -135,7 +137,8 @@ run_yaml_scan() {
     if yamllint -c "$PROJECT_ROOT/.yamllint.yml" -f parsable "$PROJECT_ROOT" > "$yaml_report" 2>&1; then
         print_success "YAML lint completed - No issues found"
     else
-        local issues_count=$(wc -l < "$yaml_report")
+        local issues_count
+        issues_count=$(wc -l < "$yaml_report")
         print_warning "YAML lint found $issues_count issues - check $yaml_report"
     fi
 }
@@ -163,7 +166,8 @@ run_shell_scan() {
     if echo "$shell_files" | xargs shellcheck --format=json > "$shellcheck_report" 2>&1; then
         print_success "Shellcheck completed - No issues found"
     else
-        local issues_count=$(jq length "$shellcheck_report" 2>/dev/null || echo "unknown")
+        local issues_count
+        issues_count=$(jq length "$shellcheck_report" 2>/dev/null || echo "unknown")
         print_warning "Shellcheck found $issues_count issues - check $shellcheck_report"
     fi
 }
@@ -182,7 +186,8 @@ run_ansible_scan() {
     if ansible-lint -c "$PROJECT_ROOT/.ansible-lint" "$PROJECT_ROOT" > "$ansible_report" 2>&1; then
         print_success "Ansible lint completed - No issues found"
     else
-        local issues_count=$(grep -c "^TASK" "$ansible_report" 2>/dev/null || echo "unknown")
+        local issues_count
+        issues_count=$(grep -c "^TASK" "$ansible_report" 2>/dev/null || echo "unknown")
         print_warning "Ansible lint found $issues_count potential issues - check $ansible_report"
     fi
 }
@@ -206,12 +211,14 @@ generate_summary() {
 
         # Check each report type
         if [ -f "$REPORT_DIR/gitleaks_${TIMESTAMP}.json" ]; then
-            local secrets_count=$(jq length "$REPORT_DIR/gitleaks_${TIMESTAMP}.json" 2>/dev/null || echo "unknown")
+            local secrets_count
+            secrets_count=$(jq length "$REPORT_DIR/gitleaks_${TIMESTAMP}.json" 2>/dev/null || echo "unknown")
             echo "• Secrets Detection (gitleaks): $secrets_count potential secrets found"
         fi
 
         if [ -f "$REPORT_DIR/bandit_${TIMESTAMP}.json" ]; then
-            local bandit_issues=$(jq '.results | length' "$REPORT_DIR/bandit_${TIMESTAMP}.json" 2>/dev/null || echo "unknown")
+            local bandit_issues
+            bandit_issues=$(jq '.results | length' "$REPORT_DIR/bandit_${TIMESTAMP}.json" 2>/dev/null || echo "unknown")
             echo "• Python Security (bandit): $bandit_issues issues found"
         fi
 
@@ -220,12 +227,14 @@ generate_summary() {
         fi
 
         if [ -f "$REPORT_DIR/yamllint_${TIMESTAMP}.txt" ]; then
-            local yaml_issues=$(wc -l < "$REPORT_DIR/yamllint_${TIMESTAMP}.txt")
+            local yaml_issues
+            yaml_issues=$(wc -l < "$REPORT_DIR/yamllint_${TIMESTAMP}.txt")
             echo "• YAML Validation (yamllint): $yaml_issues issues found"
         fi
 
         if [ -f "$REPORT_DIR/shellcheck_${TIMESTAMP}.json" ]; then
-            local shell_issues=$(jq length "$REPORT_DIR/shellcheck_${TIMESTAMP}.json" 2>/dev/null || echo "unknown")
+            local shell_issues
+            shell_issues=$(jq length "$REPORT_DIR/shellcheck_${TIMESTAMP}.json" 2>/dev/null || echo "unknown")
             echo "• Shell Script Security (shellcheck): $shell_issues issues found"
         fi
 

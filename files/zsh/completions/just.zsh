@@ -1,4 +1,5 @@
 #compdef just
+# shellcheck shell=bash
 
 autoload -U is-at-least
 
