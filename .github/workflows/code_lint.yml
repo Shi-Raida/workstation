@@ -76,7 +76,7 @@ jobs:
         id: lint
         uses: ludeeus/action-shellcheck@master
         with:
-          ignore_paths: .venv .git
+          ignore_paths: .venv .git files/zsh
           ignore_names: node_modules
           additional_files: 'scripts'
 
