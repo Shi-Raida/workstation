@@ -17,7 +17,7 @@ if [ -n "$selection" ]; then
         | grep "$selection" \
         | cut -d ',' -f 2 \
         | head -n 1 \
-        | xargs -i --no-run-if-empty /bin/bash -c "{}"
+        | xargs -I{} --no-run-if-empty /bin/bash -c "{}"
 fi
 
 exit 0

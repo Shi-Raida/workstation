@@ -7,7 +7,7 @@ bt_disconnected_icon="x"
 bt_is_on() {
     if [ "$(systemctl is-active bluetooth.service)" != "active" ]; then
         false; return
-    elif $(bluetoothctl show | grep -q "Powered: no"); then
+    elif bluetoothctl show | grep -q "Powered: no"; then
         false; return
     else
         true; return

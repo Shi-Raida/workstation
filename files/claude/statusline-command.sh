@@ -13,9 +13,6 @@ token_count=$(echo "$input" | jq -r '.token_count // 0')
 input_tokens=$(echo "$input" | jq -r '.input_tokens // 0')
 output_tokens=$(echo "$input" | jq -r '.output_tokens // 0')
 
-# Get current user
-user=$(whoami)
-
 # Get basename of current directory
 dir_name=$(basename "$current_dir")
 
@@ -48,10 +45,10 @@ if git -C "$current_dir" rev-parse --git-dir >/dev/null 2>&1; then
         fi
 
         # Check upstream status (ahead/behind/diverged)
-        upstream=$(git -C "$current_dir" rev-parse --abbrev-ref @{upstream} 2>/dev/null)
+        upstream=$(git -C "$current_dir" rev-parse --abbrev-ref '@{upstream}' 2>/dev/null)
         if [ -n "$upstream" ]; then
-            ahead=$(git -C "$current_dir" rev-list --count HEAD..@{upstream} 2>/dev/null)
-            behind=$(git -C "$current_dir" rev-list --count @{upstream}..HEAD 2>/dev/null)
+            ahead=$(git -C "$current_dir" rev-list --count 'HEAD..@{upstream}' 2>/dev/null)
+            behind=$(git -C "$current_dir" rev-list --count '@{upstream}..HEAD' 2>/dev/null)
 
             if [ "$ahead" -gt 0 ] && [ "$behind" -gt 0 ]; then
                 status_indicators="${status_indicators}⇕"
