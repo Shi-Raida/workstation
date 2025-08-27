@@ -3,7 +3,11 @@
   connection: local
 
   vars_files:
-    - vars/main.yml
+    - vars/components.yml
+    - vars/directories.yml
+    - vars/packages.yml
+    - vars/applications.yml
+    - vars/vault.yml
 
   handlers:
     - name: Import main handlers

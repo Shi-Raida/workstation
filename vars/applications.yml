@@ -1,0 +1,56 @@
+# ============================== Applications ============================== #
+# This file contains application-specific configurations and settings
+# Customize these settings based on your preferences and requirements
+
+# Configuration Files
+# Dotfiles and configuration templates to be copied
+config_files:
+  - btop
+  - matplotlib
+
+# Configuration files that require a graphical environment
+config_files_screen:
+  - alacritty
+
+# Firefox Configuration
+# Extensions and profiles for Firefox browser
+firefox_addons:
+  - adblocker-ultimate
+  - bitwarden-password-manager
+  - darkreader
+  - dracula-dark-colorscheme
+  - i-dont-care-about-cookies
+  - styl-us
+
+firefox_profiles:
+  - "{{ ansible_user_id }}"
+
+# Thunderbird Configuration
+# Extensions and profiles for Thunderbird email client
+thunderbird_addons:
+  - dracula-theme-for-thunderbird
+
+thunderbird_profiles:
+  - "{{ ansible_user_id }}"
+
+# Zsh Shell Configuration
+# Oh My Zsh plugins to be installed
+oh_my_zsh_plugings:
+  - { repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git", name: "zsh-syntax-highlighting" }
+  - { repo: "https://github.com/zsh-users/zsh-autosuggestions", name: "zsh-autosuggestions" }
+  - { repo: "https://github.com/zsh-users/zsh-completions", name: "zsh-completions" }
+  - { repo: "https://github.com/bigH/git-fuzzy.git", name: "git-fuzzy" }
+  - { repo: "https://github.com/Aloxaf/fzf-tab", name: "fzf-tab" }
+
+# Claude Code CLI Configuration
+# URL for downloading the Claude Code CLI installer
+claude_cli_installer_url: "https://claude.ai/install.sh"
+
+# Environment Variables
+# Additional environment settings for the playbook
+env:
+  PATH: "{{ ansible_env.PATH }}"
+
+# Tasks Configuration
+# Default tasks file for CI and testing
+tasks_file: tasks/main.yml

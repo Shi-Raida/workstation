@@ -1,0 +1,44 @@
+# =============================== Directories =============================== #
+# This file contains all directory path configurations following XDG standards
+# Modify these paths to customize your directory structure
+
+# XDG Base Directory Specification
+# Standard directories for configuration, cache, and data
+xdg_cache_home: "{{ ansible_user_dir }}/.cache"
+xdg_config_home: "{{ ansible_user_dir }}/.config"
+xdg_data_home: "{{ ansible_user_dir }}/.local/share"
+
+# Application-specific directories
+# Custom directories for caching and local installations
+cache_dir: "{{ xdg_cache_home }}/stable-bot"
+bin_dir: "{{ ansible_user_dir }}/.local/bin"
+opt_dir: "{{ ansible_user_dir }}/.local/opt"
+download_dir: "{{ ansible_user_dir }}/downloads"
+
+# Default Ubuntu directories
+# Standard Ubuntu user directories that may need to be removed/managed
+default_ubuntu_dirs:
+  - "{{ ansible_user_dir }}/Desktop"
+  - "{{ ansible_user_dir }}/Documents"
+  - "{{ ansible_user_dir }}/Downloads"
+  - "{{ ansible_user_dir }}/Music"
+  - "{{ ansible_user_dir }}/Pictures"
+  - "{{ ansible_user_dir }}/Public"
+  - "{{ ansible_user_dir }}/Templates"
+  - "{{ ansible_user_dir }}/Videos"
+
+# User directories to be created
+# Essential directories that should always exist
+user_dirs:
+  - "{{ xdg_cache_home }}"
+  - "{{ xdg_config_home }}"
+  - "{{ xdg_data_home }}"
+  - "{{ cache_dir }}"
+  - "{{ bin_dir }}"
+  - "{{ opt_dir }}"
+  - "{{ download_dir }}"
+
+# Shell-specific directories
+# Oh My Zsh installation and plugin directories
+oh_my_zsh_dir: "{{ ansible_user_dir }}/.oh-my-zsh"
+oh_my_zsh_plugings_dir: "{{ oh_my_zsh_dir }}/custom/plugins"

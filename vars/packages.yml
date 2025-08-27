@@ -1,0 +1,90 @@
+# ================================= Packages ================================= #
+# This file contains all package-related variables for the workstation setup
+# Modify these lists to add or remove packages for your installation
+
+# APT Packages
+# Core packages that work without a graphical environment
+apt_packages:
+  # Development tools and languages
+  - bibtool
+  - build-essential
+  - wmdocker
+  - docker-compose
+  - git
+  - neovim
+  - npm
+  - podman
+  - podman-compose
+  - pre-commit
+  - python3
+  - python3-pip
+  - python3-tk
+  - python3-venv
+  - syncthing
+  - texlive-full
+
+  # Internet and networking
+  - curl
+
+  # Command line utilities and tools
+  - bat
+  - btop
+  - eza
+  - fd-find
+  - fzf
+  - numlockx
+  - pandoc
+  - paperkey
+  - ripgrep
+  - sudo
+  - tree
+  - unzip
+
+# APT packages that require a graphical environment
+apt_screen_packages:
+  # Graphics and media
+  - feh
+  - gimp
+  - gnome-screenshot
+  - vlc
+
+  # Web browsers
+  - chromium-browser
+  - firefox
+
+  # Office and productivity
+  - libreoffice
+  - libreoffice-gtk3
+  - thunderbird
+  - zathura
+
+  # Terminal and system utilities
+  - alacritty
+  - brightnessctl
+  - unclutter
+  # - vagrant  # Commented out - uncomment if needed
+  - virtualbox
+  - xinit
+
+# Snap Packages
+# Core snap packages that work without a graphical environment
+snap_packages:
+  - { name: just, channel: edge }
+  - { name: node, channel: stable }
+  - { name: obsidian, channel: stable }
+
+# Snap packages that require a graphical environment
+snap_screen_packages:
+  - { name: code, channel: stable }
+  - { name: spotify, channel: stable }
+
+# Fonts
+# System fonts available through APT
+fonts:
+  - fonts-comic-neue
+  - fonts-dejavu-core
+  - fonts-noto-color-emoji
+
+# Nerd Fonts to be downloaded and installed
+nerdfonts:
+  - JetBrainsMono

@@ -1,0 +1,54 @@
+# =============================== Components ================================ #
+# This file controls which components/features are enabled during setup
+# Set enabled: false to skip installation of specific components
+
+# Component Configuration
+# Each component can be individually enabled or disabled
+components:
+  # Package Management
+  apt:
+    enabled: true    # Install APT packages
+  snap:
+    enabled: true    # Install Snap packages
+
+  # System Setup
+  ansible:
+    enabled: true    # Configure Ansible environment
+  user:
+    enabled: true    # Set up user account and directories
+
+  # Configuration and Dotfiles
+  config:
+    enabled: true    # Copy configuration files and dotfiles
+
+  # Development Tools
+  git:
+    enabled: true    # Configure Git with user settings
+  neovim:
+    enabled: true    # Install and configure Neovim
+  rust:
+    enabled: true    # Install Rust toolchain
+
+  # Desktop Environment (requires graphical session)
+  i3:
+    enabled: true    # Install and configure i3 window manager
+  fonts:
+    enabled: true    # Install system and Nerd fonts
+
+  # Applications (requires graphical session)
+  firefox:
+    enabled: true    # Configure Firefox with extensions
+  thunderbird:
+    enabled: true    # Configure Thunderbird email client
+
+  # Shell Environment
+  zsh:
+    enabled: true    # Install and configure Zsh with Oh My Zsh
+
+  # AI and Development Tools
+  claude:
+    enabled: true         # Enable Claude Code CLI setup
+    install_cli: true     # Download and install Claude CLI
+
+  agent_os:
+    enabled: true    # Install and configure Agent-OS
