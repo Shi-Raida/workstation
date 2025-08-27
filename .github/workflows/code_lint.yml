@@ -53,7 +53,6 @@ jobs:
             echo "No YAML lint issues found"
             touch yamllint-report.txt  # Create empty file
           fi
-        continue-on-error: true
 
       - name: Upload yamllint report
         if: always()
@@ -80,7 +79,6 @@ jobs:
           ignore_paths: .venv .git
           ignore_names: node_modules
           additional_files: 'scripts'
-        continue-on-error: true
 
   ansible-lint:
     name: Ansible Lint
@@ -135,7 +133,6 @@ jobs:
           else
             echo "No Ansible lint issues found (Python ${{ matrix.python-version }})"
           fi
-        continue-on-error: true
 
       - name: Upload ansible-lint report
         if: always()

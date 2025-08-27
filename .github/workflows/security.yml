@@ -98,7 +98,6 @@ jobs:
             echo "No Python files found to scan"
             echo "[]" > bandit-report.json
           fi
-        continue-on-error: true
 
       - name: Upload bandit report
         if: always()
@@ -143,7 +142,6 @@ jobs:
             echo "No Python dependency files found to scan"
             echo '{"vulnerabilities": []}' > safety-report.json
           fi
-        continue-on-error: true
 
       - name: Upload safety report
         if: always()
