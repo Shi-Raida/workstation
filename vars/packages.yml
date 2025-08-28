@@ -77,6 +77,7 @@ snap_packages:
 snap_screen_packages:
   - { name: code, channel: stable }
   - { name: spotify, channel: stable }
+  - { name: sqlitebrowser, channel: stable }
 
 # Fonts
 # System fonts available through APT
