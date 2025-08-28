@@ -2,8 +2,8 @@
 # run.sh [tasks_file]
 
 default_tasks="tasks/main.yml"
-become_password_file="/tmp/ansible_become_password"
-vault_password_file="/tmp/ansible_vault_password"
+become_password_file=".become_pass"
+vault_password_file=".vault_pass"
 file="${1:-$default_tasks}"
 file_path="$(readlink -f "$file")"
 [ $# -gt 0 ] && shift 1
