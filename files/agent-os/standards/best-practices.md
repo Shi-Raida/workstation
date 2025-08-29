@@ -38,15 +38,15 @@ ELSE:
 - Use consistent naming conventions
 </conditional-block>
 
-<conditional-block context-check="flutter-architecture" task-condition="flutter-development">
+<conditional-block context-check="flutter-architecture" task-condition="flutter-dart-development">
 IF current task involves Flutter/Dart development:
-  IF Flutter Architecture section already read in current context:
+  IF Flutter/Dart Clean Architecture section already read in current context:
     SKIP: Re-reading this section
-    NOTE: "Using Flutter Architecture already in context"
+    NOTE: "Using Flutter/Dart Clean Architecture guidelines already in context"
   ELSE:
-    READ: The following principles
+    READ: The following guidelines
 ELSE:
-  SKIP: Flutter section not relevant to current task
+  SKIP: Flutter/Dart Clean Architecture section not relevant to current task
 
 ## Flutter/Dart Clean Architecture
 

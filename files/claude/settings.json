@@ -4,6 +4,8 @@
     "allow": [
       "Bash(find:*)",
       "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
       "Bash(just lint:*)",
       "Bash(just test:*)",
       "Bash(just build:*)"

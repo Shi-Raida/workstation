@@ -48,8 +48,6 @@ Always include:
 2. Create feature branch if needed
 3. Stage all changes
 4. Create descriptive commit
-5. Push to remote
-6. Create pull request
 
 ### Branch Decision Logic
 
@@ -76,15 +74,6 @@ Commit current changes:
 - Include: All modified files
 ```
 
-### Create PR Only
-
-```
-Create pull request:
-- Title: "Add password reset functionality"
-- Target: main
-- Include test results from last run
-```
-
 ## Output Format
 
 ### Status Updates
@@ -92,8 +81,6 @@ Create pull request:
 ```
 ✓ Created branch: password-reset
 ✓ Committed changes: "Implement password reset flow"
-✓ Pushed to origin/password-reset
-✓ Created PR #123: https://github.com/...
 ```
 
 ### Error Handling

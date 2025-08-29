@@ -9,6 +9,10 @@
     - instructions/meta
     - standards
     - standards/code-style
+    - claude-code
+    - claude-code/agents
+    - commands
+    - setup
 
 - name: Copy Agent-OS instruction files
   ansible.builtin.copy:
@@ -23,6 +27,33 @@
     dest: "{{ ansible_user_dir }}/.agent-os/standards/"
     mode: '0644'
     directory_mode: '0755'
+
+- name: Copy Agent-OS claude-code files
+  ansible.builtin.copy:
+    src: agent-os/claude-code/
+    dest: "{{ ansible_user_dir }}/.agent-os/claude-code/"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Copy Agent-OS commands files
+  ansible.builtin.copy:
+    src: agent-os/commands/
+    dest: "{{ ansible_user_dir }}/.agent-os/commands/"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Copy Agent-OS setup files
+  ansible.builtin.copy:
+    src: agent-os/setup/
+    dest: "{{ ansible_user_dir }}/.agent-os/setup/"
+    mode: '0644'
+    directory_mode: '0755'
+
+- name: Copy Agent-OS config file
+  ansible.builtin.copy:
+    src: agent-os/config.yml
+    dest: "{{ ansible_user_dir }}/.agent-os/config.yml"
+    mode: '0644'
 
 - name: Verify Agent-OS installation
   ansible.builtin.stat:

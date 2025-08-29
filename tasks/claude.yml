@@ -9,16 +9,6 @@
       - node_version_check.stdout is version('v18.0.0', '>=')
     fail_msg: Node.js version 18+ is required for Claude Code CLI
 
-- name: Create .claude directory structure
-  ansible.builtin.file:
-    path: "{{ ansible_user_dir }}/.claude/{{ item }}"
-    state: directory
-    mode: '0755'
-  loop:
-    - commands
-    - agents
-    - plugins
-
 - name: Check if Claude CLI is already installed
   ansible.builtin.stat:
     path: "{{ ansible_user_dir }}/.local/bin/claude"

@@ -13,7 +13,7 @@ encoding: UTF-8
 Install Agent OS into an existing codebase, analyze current product state and progress.  Builds on plan-product.md
 
 <pre_flight_check>
-  EXECUTE: @~/.agent-os/instructions/meta/pre-flight.md
+  EXECUTE: @.agent-os/instructions/meta/pre-flight.md
 </pre_flight_check>
 
 <process_flow>
@@ -78,9 +78,7 @@ Use the context-fetcher subagent to supplement codebase analysis with business c
 
   3. **Roadmap**: What features are planned next? Any major refactoring planned?
 
-  4. **Decisions**: Are there important technical or product decisions I should document?
-
-  5. **Team Preferences**: Any coding standards or practices the team follows that I should capture?
+  4. **Team Preferences**: Any coding standards or practices the team follows that I should capture?
 </context_questions>
 
 <instructions>
@@ -105,15 +103,16 @@ Execute our standard flow for installing Agent OS in existing products
 </execution_parameters>
 
 <execution_prompt>
-  @~/.agent-os/instructions/core/plan-product.md
+  @.agent-os/instructions/core/plan-product.md
 
   I'm installing Agent OS into an existing product. Here's what I've gathered:
 
   **Main Idea**: [SUMMARY_FROM_ANALYSIS_AND_CONTEXT]
 
   **Key Features**:
-  - Already Implemented: [LIST_FROM_ANALYSIS]
-  - Planned: [LIST_FROM_USER]
+
+- Already Implemented: [LIST_FROM_ANALYSIS]
+- Planned: [LIST_FROM_USER]
 
   **Target Users**: [FROM_USER_RESPONSE]
 
@@ -145,29 +144,24 @@ Refine the generated documentation to ensure accuracy for the existing product b
     - Add any missing infrastructure details
     - Document actual deployment setup
   </tech_stack_verification>
-  <decisions_documentation>
-    - Add historical decisions that shaped current architecture
-    - Document why certain technologies were chosen
-    - Capture any pivots or major changes
-  </decisions_documentation>
 </customization_tasks>
 
 <roadmap_template>
-  ## Phase 0: Already Completed
+
+## Phase 0: Already Completed
 
   The following features have been implemented:
 
-  - [x] [FEATURE_1] - [DESCRIPTION_FROM_CODE]
-  - [x] [FEATURE_2] - [DESCRIPTION_FROM_CODE]
-  - [x] [FEATURE_3] - [DESCRIPTION_FROM_CODE]
+- [x] [FEATURE_1] - [DESCRIPTION_FROM_CODE]
+- [x] [FEATURE_2] - [DESCRIPTION_FROM_CODE]
+- [x] [FEATURE_3] - [DESCRIPTION_FROM_CODE]
 
-  ## Phase 1: Current Development
+## Phase 1: Current Development
 
-  - [ ] [IN_PROGRESS_FEATURE] - [DESCRIPTION]
+- [ ] [IN_PROGRESS_FEATURE] - [DESCRIPTION]
 
   [CONTINUE_WITH_STANDARD_PHASES]
 </roadmap_template>
-
 
 </step>
 
@@ -178,73 +172,50 @@ Refine the generated documentation to ensure accuracy for the existing product b
 Verify installation completeness and provide clear next steps for the user to start using Agent OS with their existing codebase.
 
 <verification_checklist>
-  - [ ] .agent-os/product/ directory created
-  - [ ] All product documentation reflects actual codebase
-  - [ ] Roadmap shows completed and planned features accurately
-  - [ ] Tech stack matches installed dependencies
+
+- [ ] .agent-os/product/ directory created
+- [ ] All product documentation reflects actual codebase
+- [ ] Roadmap shows completed and planned features accurately
+- [ ] Tech stack matches installed dependencies
 </verification_checklist>
 
 <summary_template>
-  ## ✅ Agent OS Successfully Installed
+
+## ✅ Agent OS Successfully Installed
 
   I've analyzed your [PRODUCT_TYPE] codebase and set up Agent OS with documentation that reflects your actual implementation.
 
-  ### What I Found
+### What I Found
 
-  - **Tech Stack**: [SUMMARY_OF_DETECTED_STACK]
-  - **Completed Features**: [COUNT] features already implemented
-  - **Code Style**: [DETECTED_PATTERNS]
-  - **Current Phase**: [IDENTIFIED_DEVELOPMENT_STAGE]
+- **Tech Stack**: [SUMMARY_OF_DETECTED_STACK]
+- **Completed Features**: [COUNT] features already implemented
+- **Code Style**: [DETECTED_PATTERNS]
+- **Current Phase**: [IDENTIFIED_DEVELOPMENT_STAGE]
 
-  ### What Was Created
+### What Was Created
 
-  - ✓ Product documentation in `.agent-os/product/`
-  - ✓ Roadmap with completed work in Phase 0
-  - ✓ Tech stack reflecting actual dependencies
+- ✓ Product documentation in `.agent-os/product/`
+- ✓ Roadmap with completed work in Phase 0
+- ✓ Tech stack reflecting actual dependencies
 
-  ### Next Steps
+### Next Steps
 
   1. Review the generated documentation in `.agent-os/product/`
   2. Make any necessary adjustments to reflect your vision
-  3. See the Agent OS README for usage instructions: https://github.com/buildermethods/agent-os
+  3. See the Agent OS README for usage instructions: <https://github.com/buildermethods/agent-os>
   4. Start using Agent OS for your next feature:
+
      ```
-     @~/.agent-os/instructions/core/create-spec.md
+     @.agent-os/instructions/core/create-spec.md
      ```
 
   Your codebase is now Agent OS-enabled! 🚀
 </summary_template>
 
-
 </step>
 
 </process_flow>
 
-## Error Handling
-
-<error_scenarios>
-  <scenario name="no_clear_structure">
-    <condition>Cannot determine project type or structure</condition>
-    <action>Ask user for clarification about project</action>
-  </scenario>
-  <scenario name="conflicting_patterns">
-    <condition>Multiple coding styles detected</condition>
-    <action>Ask user which pattern to document</action>
-  </scenario>
-  <scenario name="missing_dependencies">
-    <condition>Cannot determine full tech stack</condition>
-    <action>List detected technologies and ask for missing pieces</action>
-  </scenario>
-</error_scenarios>
-
-## Execution Summary
-
-<final_checklist>
-  <verify>
-    - [ ] Codebase analyzed thoroughly
-    - [ ] User context gathered
-    - [ ] plan-product.md executed with proper context
-    - [ ] Documentation customized for existing product
-    - [ ] Team can adopt Agent OS workflow
-  </verify>
-</final_checklist>
+<post_flight_check>
+  EXECUTE: @.agent-os/instructions/meta/post-flight.md
+</post_flight_check>
