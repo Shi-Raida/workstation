@@ -84,6 +84,7 @@ if [ "$NO_BASE" = true ]; then
     # Download and source functions when running from GitHub
     TEMP_FUNCTIONS="/tmp/agent-os-functions-$$.sh"
     curl -sSL "${BASE_URL}/setup/functions.sh" -o "$TEMP_FUNCTIONS"
+    # shellcheck source=/dev/null
     source "$TEMP_FUNCTIONS"
     rm "$TEMP_FUNCTIONS"
 else
@@ -93,6 +94,7 @@ else
     BASE_AGENT_OS="$(dirname "$SCRIPT_DIR")"
     echo "✓ Using Agent OS base installation at $BASE_AGENT_OS"
     # Source shared functions from base installation
+    # shellcheck disable=SC1091
     source "$SCRIPT_DIR/functions.sh"
 fi
 

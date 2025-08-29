@@ -66,7 +66,7 @@ copy_directory() {
 
     # Copy all files and subdirectories
     find "$source" -type f | while read -r file; do
-        relative_path="${file#$source/}"
+        relative_path="${file#"$source"/}"
         dest_file="$dest/$relative_path"
         dest_dir=$(dirname "$dest_file")
         mkdir -p "$dest_dir"
@@ -90,7 +90,7 @@ convert_to_cursor_rule() {
     local dest="$2"
 
     if [ -f "$dest" ]; then
-        echo "  ⚠️  $(basename $dest) already exists - skipping"
+        echo "  ⚠️  $(basename "$dest") already exists - skipping"
     else
         # Create the front-matter and append original content
         cat > "$dest" << EOF
@@ -100,7 +100,7 @@ alwaysApply: false
 
 EOF
         cat "$source" >> "$dest"
-        echo "  ✓ $(basename $dest)"
+        echo "  ✓ $(basename "$dest")"
     fi
 }
 
