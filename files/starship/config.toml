@@ -26,3 +26,12 @@ symbol = " "
 [username]
 format = "[$user]($style) on "
 style_user = "bold #8be9fd"
+
+[custom.git_wip]
+command = "~/.config/starship/git-wip-check.sh"
+when = "~/.config/starship/git-wip-check.sh"
+require_repo = true
+symbol = "🚧"
+format = "[$symbol $output]($style) "
+style = "bold #f1fa8c"
+description = "Shows WIP indicator when last commit is a work-in-progress"
