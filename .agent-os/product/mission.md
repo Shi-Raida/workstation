@@ -1,56 +1,55 @@
-# Product Mission
+# Mission
 
-> Last Updated: 2025-08-25
-> Version: 1.0.0
+## Vision
+To provide a comprehensive, secure, and automated personal workstation provisioning system that enables consistent development environments across multiple machines while maintaining security best practices and modularity.
 
-## Pitch
+## Purpose
+Stable-Bot is a personal Infrastructure-as-Code solution built with Ansible that automates the complete setup and configuration of Ubuntu/Debian workstations for development work. It transforms a fresh installation into a fully configured, production-ready development environment with all necessary tools, applications, and personalized configurations.
 
-Stable-Bot is a comprehensive automation framework designed to reproduce and synchronize workspace environments across multiple computers and servers. It eliminates the pain of manual environment setup and configuration drift by providing a declarative, version-controlled approach to workspace management.
+## Core Mission
+**Eliminate the pain of setting up new workstations** by automating the entire provisioning process through a single, secure, and repeatable Ansible playbook that can reproduce an identical working environment on any Ubuntu/Debian machine.
 
-## Users
+## Primary Goals
 
-**Primary User:** Personal use across several computers and servers for consistent development environment management.
+### 🛡️ Security-First Approach
+- Secure handling of sensitive data through Ansible Vault encryption
+- Proper privilege escalation controls with become password handling
+- No hardcoded credentials or sensitive information in plain text
+- Vault password protection for all encrypted data
 
-**Secondary Users:** Developers and system administrators who need to:
+### 🧩 Modular Architecture
+- Component-based system allowing selective installation of features
+- Each major functionality (development tools, desktop environment, applications) is independently configurable
+- Easy to extend and customize for different use cases
+- Clean separation of concerns between different system aspects
 
-- Maintain consistent environments across multiple machines
-- Quickly reproduce workspace setups on new systems
-- Synchronize configurations and dotfiles across devices
-- Automate repetitive system administration tasks
+### 🔄 Reproducible Environments
+- Identical development environment across multiple machines
+- Version-controlled configuration ensuring consistency
+- Automated setup eliminates human error and configuration drift
+- Easy rollback and modification capabilities
 
-## The Problem
+### 🚀 Developer-Focused
+- Pre-configured development tools (Git with diff-so-fancy, Neovim, Rust toolchain)
+- Modern shell environment (Zsh with Oh My Zsh)
+- Desktop environment optimized for productivity (i3 window manager)
+- Integration with modern development workflows (Claude Code CLI, Agent-OS)
 
-Setting up and maintaining consistent development environments across multiple machines is time-consuming and error-prone. Developers face:
+## Target Audience
+- **Primary**: Single developer (personal use) who needs consistent workstation setups
+- **Secondary**: Developers who want to learn Infrastructure-as-Code principles
+- **Tertiary**: Teams looking for inspiration on automated workstation provisioning
 
-- Manual configuration of packages, applications, and settings on each new system
-- Configuration drift between machines leading to "works on my machine" problems  
-- Lost productivity when switching between computers or setting up new environments
-- Difficulty backing up and restoring complete workspace configurations
-- Inconsistent tooling and settings across personal and professional environments
+## Success Metrics
+- **Time to Productivity**: Fresh Ubuntu installation to fully configured development environment in under 30 minutes
+- **Consistency**: 100% identical configurations across different machines
+- **Security**: Zero plain-text secrets in repository, all sensitive data properly encrypted
+- **Maintainability**: Easy addition/removal of components without affecting other features
+- **Reliability**: Successful execution across different Ubuntu/Debian versions
 
-## Differentiators
-
-- **Ansible-based**: Leverages proven infrastructure automation technology for reliability
-- **Personal-scale optimized**: Designed specifically for individual use across small fleets (3-7 machines)
-- **Comprehensive coverage**: Handles everything from packages to dotfiles to application configurations
-- **Template approach**: Provides a public template that others can fork and customize
-- **Integration-ready**: Built for seamless integration with modern CI/CD and Agent-OS workflows
-
-## Key Features
-
-**Current Features:**
-
-- Automated package management across different operating systems
-- Dotfile synchronization and version control
-- Application configuration management (mail clients, Firefox, i3 window manager, Zsh)
-- Multi-environment support (personal computers + servers)
-- Ansible playbook automation for consistent deployments
-
-**Planned Features:**
-
-- GitHub CI/CD pipeline integration for automated deployments
-- Claude Code integration for AI-assisted configuration management  
-- Agent-OS integration for enhanced automation capabilities
-- Security improvements and credential management
-- CLI UI for interactive installation and configuration
-- Template customization tools for community adoption
+## Key Differentiators
+1. **Security**: Proper secrets management with Ansible Vault
+2. **Modularity**: Granular control over what gets installed
+3. **Completeness**: Covers everything from packages to desktop environment
+4. **Modern Stack**: Integration with cutting-edge tools like Claude Code CLI
+5. **Quality**: Comprehensive CI/CD with security scanning, linting, and automated testing

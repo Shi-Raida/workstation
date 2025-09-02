@@ -1,5 +1,15 @@
-# Agent OS Mission (Lite)
+# Stable-Bot Mission
 
-Stable-Bot: Automated workstation provisioning system that transforms fresh Linux installations into fully configured development environments through declarative Ansible playbooks, eliminating manual setup complexity and ensuring consistent, reproducible workstation states.
+**Eliminate the pain of setting up new workstations** by automating the entire provisioning process through a secure, repeatable Ansible playbook.
 
-Differentiates through comprehensive automation coverage (packages, configs, desktop environment), modular architecture enabling selective deployment, and intelligent configuration templating that adapts to different system contexts while maintaining developer productivity focus.
+## What It Does
+Stable-Bot transforms a fresh Ubuntu/Debian installation into a fully configured development environment with all necessary tools, applications, and personalized configurations.
+
+## Key Benefits
+- **🛡️ Security-First**: Ansible Vault encryption for all sensitive data
+- **🧩 Modular**: Component-based architecture - install only what you need
+- **🔄 Reproducible**: Identical environment across all your machines
+- **⚡ Fast**: Single command setup for complete workstation
+
+## Target
+Personal workstation provisioning system for consistent development environments across multiple machines.
